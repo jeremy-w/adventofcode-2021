@@ -5,7 +5,9 @@ official site.
 
 ## Programming Language of the Month
 
-TBH I haven't decided yet.
+Decided on **Factor** once I sorted out a sort of workable environment.
+
+### Contenders
 
 I'd like to do [Factor](https://factorcode.org/) or
 [BQN](https://mlochbaum.github.io/BQN/), but:
@@ -55,4 +57,9 @@ that I already know how to use. Alas.
 
 ## Daily Workflow
 
-TODO: Write this section once I figure it out for myself.
+- Fire up the GUI from the factor/ directory.
+- "dayNN" dup scaffold-work scaffold-test
+- pbpaste > src/dayNN/input.txt
+- Turn the example into a literal + test in the test file.
+- Copy the previous day to get the basic structure down.
+- Write some code.
