@@ -1,7 +1,8 @@
 ! Copyright (C) 2021 Your name.
 ! See http://factorcode.org/license.txt for BSD license.
-USING: io.encodings.utf8 io.files kernel math math.parser
-math.vectors prettyprint sequences ;
+USING: accessors io.encodings.utf8 io.files kernel math
+math.parser math.vectors prettyprint sequences vocabs.metadata
+vocabs.parser ;
 IN: day01
 
 ! count the number of times a depth measurement increases from the previous measurement
@@ -22,5 +23,7 @@ IN: day01
 
 : number-lines ( path -- num-seq ) utf8 file-lines [ string>number ] map ;
 
-! ???: How do I get a path relative to this day01.factor file? This is from the image root, where I launched the process.
-: day01 ( -- ) "./work/day01/input.txt" number-lines dup silver "silver: " . .  gold "gold: " . . ;
+! returns the path to input.txt for the vocab.
+: input-path ( vocabspec -- path ) "input.txt" vocab-file-path ;
+
+: day01 ( -- ) "day01" input-path number-lines dup silver "silver: " . .  gold "gold: " . . ;
