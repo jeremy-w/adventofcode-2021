@@ -1,4 +1,4 @@
-! Copyright (C) 2021 Your name.
+! Copyright (C) 2021 Jeremy W. Sherman.
 ! See http://factorcode.org/license.txt for BSD license.
 USING: tools.test day01 ;
 IN: day01.tests

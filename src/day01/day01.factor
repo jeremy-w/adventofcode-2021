@@ -1,4 +1,4 @@
-! Copyright (C) 2021 Your name.
+! Copyright (C) 2021 Jeremy W. Sherman.
 ! See http://factorcode.org/license.txt for BSD license.
 USING: accessors io.encodings.utf8 io.files kernel math
 math.parser math.vectors prettyprint sequences vocabs.metadata
