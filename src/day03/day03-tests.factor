@@ -18,3 +18,9 @@ IN: day03.tests
 " "\n" split harvest ;
 
 [ 22 9 ] [ example gamma-epsilon ] unit-test
+
+
+[ { "0" "1" } { { "0" "1" } } ] [ { "0" "1" } { { "0" "1" } { "1" "0" } } 0 winnow ] unit-test
+[ 23 ] [ example oxygen-generator-rating ] unit-test
+! [ 10 ] [ example c02-scrubber-rating ] unit-test
+! [ 230 ] [ example gold ] unit-test
