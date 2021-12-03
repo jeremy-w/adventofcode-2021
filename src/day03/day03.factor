@@ -25,29 +25,44 @@ IN: day03
 
 : silver ( input -- x*y ) gamma-epsilon * ;
 
-:: (winnow) ( vec i -- smaller-vec i )
+:: (winnow-o2) ( vec i -- smaller-vec i )
     vec dup flip [ histogram ] map :> keeper-bits
     keeper-bits i swap nth gamma-bit :> keeper-bit
-    "round" . i . "keeper-bits" . keeper-bits . "keeper-bit" . keeper-bit .
+    ! "round" . i . "keeper-bits" . keeper-bits . "keeper-bit" . keeper-bit .
     vec [ i swap nth keeper-bit = ] filter :> smaller-vec
-    smaller-vec .
+    ! smaller-vec .
     drop
     smaller-vec i
     ;
 
-: winnow ( vec i -- smaller-vec )
+: winnow-o2 ( vec i -- smaller-vec )
     over length 1 > [
-        (winnow)
+        (winnow-o2)
     ] when drop ;
+
+:: (winnow-co2) ( vec i -- smaller-vec i )
+vec dup flip [ histogram ] map :> keeper-bits
+keeper-bits i swap nth gamma-bit flip-bitchar :> keeper-bit
+! "round" . i . "keeper-bits" . keeper-bits . "keeper-bit" . keeper-bit .
+vec [ i swap nth keeper-bit = ] filter :> smaller-vec
+! smaller-vec .
+drop
+smaller-vec i
+;
+
+: winnow-co2 ( vec i -- smaller-vec )
+over length 1 > [
+    (winnow-co2)
+] when drop ;
 
 : oxygen-generator-rating ( matrix -- n )
     dup first length [0,b)
-    [ winnow ] each
+    [ winnow-o2 ] each
     first as-dec ;
 
 : c02-scrubber-rating ( matrix -- n )
     dup first length [0,b)
-    [ winnow ] each
+    [ winnow-co2 ] each
     first as-dec ;
 
 : life-support-rating ( matrix -- n ) [ oxygen-generator-rating ] [ c02-scrubber-rating ] bi * ;
