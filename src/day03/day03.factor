@@ -2,7 +2,7 @@
 ! See http://factorcode.org/license.txt for BSD license.
 USING: arrays assocs combinators io.encodings.utf8 io.files
 kernel math math.parser math.ranges math.statistics math.vectors
-sequences splitting strings vectors vocabs.metadata ;
+sequences splitting strings vectors vocabs.metadata prettyprint ;
 IN: day03
 
 : string>1strings ( str -- arr ) [ 1string ] { } map-as ;
@@ -25,33 +25,29 @@ IN: day03
 
 : silver ( input -- x*y ) gamma-epsilon * ;
 
-:: (winnow) ( keeper-bits vec i -- keeper-bits smaller-vec i )
-    keeper-bits i swap nth :> keeper-bit
-    keeper-bits
-    vec [ i swap nth keeper-bit = ] filter
-    "after i" . vec .
-    i
+:: (winnow) ( vec i -- smaller-vec i )
+    vec dup flip [ histogram ] map :> keeper-bits
+    keeper-bits i swap nth gamma-bit :> keeper-bit
+    "round" . i . "keeper-bits" . keeper-bits . "keeper-bit" . keeper-bit .
+    vec [ i swap nth keeper-bit = ] filter :> smaller-vec
+    smaller-vec .
+    drop
+    smaller-vec i
     ;
 
-: winnow ( keeper-bits vec i -- keeper-bits smaller-vec )
+: winnow ( vec i -- smaller-vec )
     over length 1 > [
         (winnow)
     ] when drop ;
 
 : oxygen-generator-rating ( matrix -- n )
-    dup flip [ histogram ] map [ gamma-bit ] map
-    swap >vector
     dup first length [0,b)
     [ winnow ] each
-    swap drop
     first as-dec ;
 
 : c02-scrubber-rating ( matrix -- n )
-    dup flip [ histogram ] map [ gamma-bit flip-bitchar ] map
-    swap >vector
     dup first length [0,b)
     [ winnow ] each
-    swap drop
     first as-dec ;
 
 : life-support-rating ( matrix -- n ) [ oxygen-generator-rating ] [ c02-scrubber-rating ] bi * ;
