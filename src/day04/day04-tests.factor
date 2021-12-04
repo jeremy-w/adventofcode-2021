@@ -50,3 +50,7 @@ IN: day04.tests
 [ t ] [ T{ board f { { 1 2 } { 3 4 } } HS{ 1 2 } } { 1 2 } single-row-win? nip ] unit-test
 [ f ] [ T{ board f { { 1 2 } { 3 4 } } HS{ 1 4 } } row-win? ] unit-test
 [ t ] [ T{ board f { { 1 2 } { 3 4 } } HS{ 1 2 } } row-win? ] unit-test
+[ f ] [ T{ board f { { 1 2 } { 3 4 } } HS{ 1 4 } } col-win? ] unit-test
+[ t ] [ T{ board f { { 1 2 } { 3 4 } } HS{ 1 3 } } col-win? ] unit-test
+[ t ] [ T{ board f { { 1 2 } { 3 4 } } HS{ 1 2 } } win? ] unit-test ! via row
+[ t ] [ T{ board f { { 1 2 } { 3 4 } } HS{ 1 3 } } win? ] unit-test ! via col

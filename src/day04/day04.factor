@@ -15,7 +15,7 @@ C: <board> board
 ! GOTCHA: need in?, not member?, with hash-set. get a "huh no length method" error with member?.
 : single-row-win? ( board row -- board t/f ) [ [ dup marked>> ] dip swap in? ] all? ;
 : row-win? ( board -- t/f ) dup rows>> [ single-row-win? ] any? nip ;
-: col-win? ( board -- t/f ) rows>> flip [ [ dup marked>> swap member? ] all? ] any? ;
+: col-win? ( board -- t/f ) dup rows>> flip [ single-row-win? ] any? nip ;
 : win? ( board -- t/f ) [ row-win? ] [ col-win? ] bi or ;
 
 TUPLE: game next-number-index numbers boards ;
