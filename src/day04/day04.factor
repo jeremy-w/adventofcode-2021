@@ -3,7 +3,7 @@
 USING: accessors arrays assocs combinators grouping
 io.encodings.utf8 io.files kernel math math.parser math.ranges
 math.statistics math.vectors prettyprint sequences sets
-splitting strings vectors vocabs.metadata ;
+splitting strings tools.continuations vectors vocabs.metadata ;
 IN: day04
 
 TUPLE: board rows marked ;
@@ -11,6 +11,12 @@ TUPLE: board rows marked ;
 C: <board> board
 
 : mark ( board n -- board' ) [ swap [ adjoin ] keep ] curry change-marked ;
+
+! GOTCHA: need in?, not member?, with hash-set. get a "huh no length method" error with member?.
+: single-row-win? ( board row -- board t/f ) [ [ dup marked>> ] dip swap in? ] all? ;
+: row-win? ( board -- t/f ) dup rows>> [ single-row-win? ] any? nip ;
+: col-win? ( board -- t/f ) rows>> flip [ [ dup marked>> swap member? ] all? ] any? ;
+: win? ( board -- t/f ) [ row-win? ] [ col-win? ] bi or ;
 
 TUPLE: game next-number-index numbers boards ;
 

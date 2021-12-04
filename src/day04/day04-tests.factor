@@ -1,6 +1,6 @@
 ! Copyright (C) 2021 Your name.
 ! See http://factorcode.org/license.txt for BSD license.
-USING: arrays day04 math sequences splitting tools.test ;
+USING: arrays day04 kernel math sequences splitting tools.test ;
 IN: day04.tests
 
 : example ( -- str ) "7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
@@ -43,3 +43,10 @@ IN: day04.tests
 [ { "1,2,34" "" " 1  2" " 3  4" "" } parse ] unit-test
 
 [ T{ board f { } HS{ 99 } } ] [ { } HS{ } <board> 99 mark ] unit-test
+
+[ f ] [
+    T{ board f { { 1 2 } { 3 4 } } HS{ 1 4 } }
+    { 1 2 } single-row-win? nip ] unit-test
+[ t ] [ T{ board f { { 1 2 } { 3 4 } } HS{ 1 2 } } { 1 2 } single-row-win? nip ] unit-test
+[ f ] [ T{ board f { { 1 2 } { 3 4 } } HS{ 1 4 } } row-win? ] unit-test
+[ t ] [ T{ board f { { 1 2 } { 3 4 } } HS{ 1 2 } } row-win? ] unit-test
