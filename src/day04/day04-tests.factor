@@ -68,3 +68,21 @@ IN: day04.tests
         } }
     step! over?
 ] unit-test
+
+[ 1 ] [ T{ game f 1 { 1 2 3 } {
+        T{ board f { { 1 2 } { 3 4 } } HS{ 1 } }
+        } } last-called-number
+] unit-test
+
+[ HS{ 1 2 } 0 ] [ HS{ 1 2 } { 1 2 } sum-unmarked-row ] unit-test
+[ HS{ 1 } 2 ] [ HS{ 1 } { 1 2 } sum-unmarked-row ] unit-test
+[ HS{ } 3 ] [ HS{ } { 1 2 } sum-unmarked-row ] unit-test
+
+[ 7 ] [ T{ board f { { 1 2 } { 3 4 } } HS{ 1 2 } } sum-unmarked ] unit-test
+
+! 3 4 + 2 * ==> 14
+[ 14 ] [
+    T{ game f 2 { 1 2 3 } {
+        T{ board f { { 1 2 } { 3 4 } } HS{ 1 2 } }
+        } } score
+] unit-test

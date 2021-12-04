@@ -16,12 +16,17 @@ C: <board> board
 : row-win? ( board -- t/f ) dup rows>> [ single-row-win? ] any? nip ;
 : col-win? ( board -- t/f ) dup rows>> flip [ single-row-win? ] any? nip ;
 : win? ( board -- t/f ) [ row-win? ] [ col-win? ] bi or ;
+: sum-unmarked-row ( marked-set row -- marked-set n ) over [ in? ] curry reject sum ;
+: sum-unmarked ( board -- n ) [ marked>> ] [ rows>> ] bi [ sum-unmarked-row ] map sum nip ;
 
 TUPLE: game next-number-index numbers boards ;
 C: <game> game
 
 : over? ( game -- ? ) boards>> [ win? ] any? ;
 : step! ( game -- game' ) dup [ next-number-index>> ] [ numbers>> ] bi nth over boards>> swap [ mark drop ] curry each ;
+: last-called-number ( game -- n ) [ next-number-index>> 1 - ] [ numbers>> ] bi nth ;
+! GOTCHA: find returns both index & element, but we just want the element.
+: score ( game-over -- score ) [ boards>> [ win? ] find nip sum-unmarked ] [ last-called-number ] bi * ;
 
 ! : play ( game -- game' ) ;
 
