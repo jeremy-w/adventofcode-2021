@@ -37,7 +37,7 @@ C: <game> game
 : sections>game ( line-groups -- game ) 0 swap 1 cut [ first section>numbers ] dip [ section>rows HS{ } clone <board> ] map <game> ;
 : parse ( lines -- game ) sections sections>game ;
 
-: silver ( input -- x*y ) drop f ;
+: silver ( input -- x*y ) parse play score ;
 
 : gold ( input -- n ) drop f ;
 
