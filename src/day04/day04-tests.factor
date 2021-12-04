@@ -69,6 +69,22 @@ IN: day04.tests
     step! over?
 ] unit-test
 
+[ T{ game f 2 { 1 2 3 } {
+        T{ board f { { 1 2 } { 3 4 } } HS{ 1 2 } }
+        } }
+] [
+    T{ game f 1 { 1 2 3 } {
+        T{ board f { { 1 2 } { 3 4 } } HS{ 1 } }
+        } }
+    step!
+] unit-test
+
+[ t ] [
+        T{ game f 3 { 1 2 3 } {
+        T{ board f { { 1 2 } { 3 4 } } HS{ 1 } }
+        } } over?
+] unit-test
+
 [ 1 ] [ T{ game f 1 { 1 2 3 } {
         T{ board f { { 1 2 } { 3 4 } } HS{ 1 } }
         } } last-called-number
@@ -86,3 +102,4 @@ IN: day04.tests
         T{ board f { { 1 2 } { 3 4 } } HS{ 1 2 } }
         } } score
 ] unit-test
+! [ 4512 ] [ example parse play ] unit-test

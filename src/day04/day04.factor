@@ -22,13 +22,13 @@ C: <board> board
 TUPLE: game next-number-index numbers boards ;
 C: <game> game
 
-: over? ( game -- ? ) boards>> [ win? ] any? ;
-: step! ( game -- game' ) dup [ next-number-index>> ] [ numbers>> ] bi nth over boards>> swap [ mark drop ] curry each ;
+: over? ( game -- ? ) [ boards>> [ win? ] any? ] [ [ next-number-index>> ] [ numbers>> length ] bi >= ] bi or ;
+: step! ( game -- game' ) dup [ next-number-index>> ] [ numbers>> ] bi nth over boards>> swap [ mark drop ] curry each [ 1 + ] change-next-number-index ;
 : last-called-number ( game -- n ) [ next-number-index>> 1 - ] [ numbers>> ] bi nth ;
 ! GOTCHA: find returns both index & element, but we just want the element.
 : score ( game-over -- score ) [ boards>> [ win? ] find nip sum-unmarked ] [ last-called-number ] bi * ;
 
-! : play ( game -- game' ) ;
+: play ( game -- game' ) [ dup over? not ] [ step! ] while ;
 
 : sections ( lines -- line-groups ) { "" } split harvest ;
 : section>numbers ( line-group -- numbers ) first { CHAR: , } split [ string>number ] map ;
