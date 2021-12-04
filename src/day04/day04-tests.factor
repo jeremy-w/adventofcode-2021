@@ -103,3 +103,19 @@ IN: day04.tests
         } } score
 ] unit-test
 [ 4512 ] [ example parse play score ] unit-test
+
+[ T{ game f 15 { 7 4 9 5 11 17 23 2 0 14 21 24 10 16 13 6 15 25 12 22 18 20 8 19 3 26 1 }
+{ T{ board
+    { rows
+        {
+            { 3 15 0 2 22 }
+            { 9 18 13 17 5 }
+            { 19 8 7 25 23 }
+            { 20 11 10 24 4 }
+            { 14 21 16 12 6 }
+        }
+    }
+    { marked HS{ 7 4 9 5 11 17 23 2 0 14 21 24 10 16 13 } }
+} }
+} ] [ example parse play-to-end ] unit-test
+[ 1924 ] [ example parse play-to-end score ] unit-test

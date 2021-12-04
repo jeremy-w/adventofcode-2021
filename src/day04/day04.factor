@@ -22,7 +22,8 @@ C: <board> board
 TUPLE: game next-number-index numbers boards ;
 C: <game> game
 
-: over? ( game -- ? ) [ boards>> [ win? ] any? ] [ [ next-number-index>> ] [ numbers>> length ] bi >= ] bi or ;
+: out-of-numbers? ( game -- ? ) [ next-number-index>> ] [ numbers>> length ] bi >= ;
+: over? ( game -- ? ) [ boards>> [ win? ] any? ] [ out-of-numbers? ] bi or ;
 : step! ( game -- game' ) dup [ next-number-index>> ] [ numbers>> ] bi nth over boards>> swap [ mark drop ] curry each [ 1 + ] change-next-number-index ;
 : last-called-number ( game -- n ) [ next-number-index>> 1 - ] [ numbers>> ] bi nth ;
 ! GOTCHA: find returns both index & element, but we just want the element.
@@ -39,6 +40,10 @@ C: <game> game
 
 : silver ( input -- x*y ) parse play score ;
 
-: gold ( input -- n ) drop f ;
+: play-to-end ( game -- game' )
+    [ dup [ out-of-numbers? ] [ boards>> [ length ] [ [ win? ] count ] bi - 1 = not ] bi or ] [ step! ] while
+    [ [ win? ] reject ] change-boards
+    play ;
+: gold ( input -- n ) parse play-to-end score ;
 
 : day04 ( -- silverAnswer goldAnswer ) "day04" "input.txt" vocab-file-path utf8 file-lines [ silver ] [ gold ] bi ;
