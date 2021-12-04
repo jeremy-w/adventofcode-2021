@@ -61,3 +61,10 @@ IN: day04.tests
         } }
     over?
 ] unit-test
+
+[ t ] [
+    T{ game f 1 { 1 2 3 } {
+        T{ board f { { 1 2 } { 3 4 } } HS{ 1 } }
+        } }
+    step! over?
+] unit-test

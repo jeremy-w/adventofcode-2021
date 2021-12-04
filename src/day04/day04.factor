@@ -21,6 +21,7 @@ TUPLE: game next-number-index numbers boards ;
 C: <game> game
 
 : over? ( game -- ? ) boards>> [ win? ] any? ;
+: step! ( game -- game' ) dup [ next-number-index>> ] [ numbers>> ] bi nth over boards>> swap [ mark drop ] curry each ;
 
 ! : play ( game -- game' ) ;
 
