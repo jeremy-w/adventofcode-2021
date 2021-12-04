@@ -41,3 +41,5 @@ IN: day04.tests
 
 [ T{ game f 0 { 1 2 34 } { T{ board f { { 1 2 } { 3 4 } } HS{ } } } } ]
 [ { "1,2,34" "" " 1  2" " 3  4" "" } parse ] unit-test
+
+[ T{ board f { } HS{ 99 } } ] [ { } HS{ } <board> 99 mark ] unit-test
