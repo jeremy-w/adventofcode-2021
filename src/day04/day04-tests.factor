@@ -54,3 +54,10 @@ IN: day04.tests
 [ t ] [ T{ board f { { 1 2 } { 3 4 } } HS{ 1 3 } } col-win? ] unit-test
 [ t ] [ T{ board f { { 1 2 } { 3 4 } } HS{ 1 2 } } win? ] unit-test ! via row
 [ t ] [ T{ board f { { 1 2 } { 3 4 } } HS{ 1 3 } } win? ] unit-test ! via col
+
+[ t ] [
+    T{ game f 2 { 1 2 3 } {
+        T{ board f { { 1 2 } { 3 4 } } HS{ 1 2 } }
+        } }
+    over?
+] unit-test
