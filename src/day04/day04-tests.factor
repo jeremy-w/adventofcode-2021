@@ -102,4 +102,4 @@ IN: day04.tests
         T{ board f { { 1 2 } { 3 4 } } HS{ 1 2 } }
         } } score
 ] unit-test
-! [ 4512 ] [ example parse play ] unit-test
+[ 4512 ] [ example parse play score ] unit-test
