@@ -32,11 +32,31 @@ C: <line> line
 : diagonal? ( line -- ? ) [ from>> ] [ thru>> ] bi [ same-over? ] [ same-down? ] 2bi or not ;
 ! GOTCHA: split is by single element, not subsequence, so no "split by string" like " -> " as I originally tried.
 : string>line ( string -- line ) " " split >vector 1 swap remove-nth! unpair [ string>point ] bi@ <line> ;
+! XXX: This ignores diagonals for now.
+: line-points ( line -- points ) [ from>> ] [ thru>> ] bi 2dup same-over? [
+    dup over>> -rot
+    [ down>> ] bi@ [a,b]
+    swap [ swap <point> ] curry map
+    ] [
+    dup down>> -rot
+    [ over>> ] bi@ [a,b]
+    swap [ <point> ] curry map
+    ] if ;
+! TODO: t if point falls within line.
+: in? ( line point -- ? ) [ line-points ] dip in? ;
 
 : input-lines>lines ( lines -- <line>s ) harvest [ string>line ] map ;
 
+! true if more than one line crosses the point.
+: overlap? ( lines point -- ? ) [ in? ] curry [ find drop ] [ find-last drop ] 2bi = not ;
+
+! TODO: collection of all points, from 0,0 to N,M.
+: all-points ( lines -- seq ) drop { } ;
+
+: overlapping-points ( <line>s -- n ) [ diagonal? ] reject dup all-points [ dupd overlap? ] filter nip ;
+
 ! determine the number of points where at least two lines overlap. ignore diagonal lines.
-: silver ( input -- x*y ) input-lines>lines . f ;
+: silver ( input -- x*y ) input-lines>lines overlapping-points length ;
 
 : gold ( input -- n ) drop f ;
 

@@ -14,3 +14,17 @@ IN: day05.tests
 2array 1array [ { "0,9 -> 5,9"
 "0,9 -> 2,9"
 "" } input-lines>lines ] unit-test
+
+ 0 0 <point> 0 1 <point> 2array 1array
+ [ 0 0 <point> 0 1 <point> <line> line-points ] unit-test
+
+ 0 1 <point> 0 0 <point> 2array 1array
+ [ 0 1 <point> 0 0 <point> <line> line-points ] unit-test
+
+ 1 0 <point> 0 0 <point> 2array 1array
+ [ 1 0 <point> 0 0 <point> <line> line-points ] unit-test
+
+ 0 0 <point> 1 0 <point> 2array 1array
+ [ 0 0 <point> 1 0 <point> <line> line-points ] unit-test
+
+! { 5 } [ example input-lines>lines overlapping-points length ] unit-test
