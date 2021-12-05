@@ -19,14 +19,18 @@ IN: day05
 5,5 -> 8,2
 " "\n" split ;
 
+: unpair ( 2array -- first second ) [ first ] [ second ] bi ;
+
 TUPLE: point over down ;
 C: <point> point
+: string>point ( string -- point ) "," split [ string>number ] map unpair <point> ;
 : same-over? ( p1 p2 -- ? ) [ over>> ] bi@ = ;
 : same-down? ( p1 p2 -- ? ) [ down>> ] bi@ = ;
 
 TUPLE: line from thru ;
 C: <line> line
 : diagonal? ( line -- ? ) [ from>> ] [ thru>> ] bi [ same-over? ] [ same-down? ] 2bi or not ;
+: string>line ( string -- line ) " " split >vector 1 swap remove-nth! unpair [ string>point ] bi@ <line> ;
 
 ! determine the number of points where at least two lines overlap. ignore diagonal lines.
 : silver ( input -- x*y ) drop f ;
