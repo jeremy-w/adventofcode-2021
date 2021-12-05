@@ -32,4 +32,7 @@ IN: day05.tests
 { f } [ 1 1 <point> 1 0 <point> <line>
     0 0 <point> crosses-point? ] unit-test
 
+0 0 <point> 0 1 <point> 0 2 <point> 3array 1array
+[ 0 0 <point> 0 2 <point> <line> line-points ] unit-test
+
 { 5 } [ example input-lines>lines overlapping-points length ] unit-test

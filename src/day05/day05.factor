@@ -61,7 +61,9 @@ C: <line> line
     nip
     concat ;
 
-: overlapping-points ( <line>s -- n ) [ diagonal? ] reject dup all-points [ dupd overlap? ] filter nip ;
+! : line-points ( line -- points ) 1array all-points ;
+
+: overlapping-points ( <line>s -- n ) [ diagonal? ] reject [ line-points ] map concat histogram [ nip 2 < ] assoc-reject keys ;
 
 ! determine the number of points where at least two lines overlap. ignore diagonal lines.
 : silver ( input -- x*y ) input-lines>lines overlapping-points length ;
