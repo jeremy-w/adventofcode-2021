@@ -6,6 +6,29 @@ math.statistics math.vectors prettyprint sequences sets
 splitting strings tools.continuations vectors vocabs.metadata ;
 IN: day05
 
+! each line represents a line from [(over,down), (over,down)] inclusive at both ends.
+: example ( -- lines ) "0,9 -> 5,9
+8,0 -> 0,8
+9,4 -> 3,4
+2,2 -> 2,1
+7,0 -> 7,4
+6,4 -> 2,0
+0,9 -> 2,9
+3,4 -> 1,4
+0,0 -> 8,8
+5,5 -> 8,2
+" "\n" split ;
+
+TUPLE: point over down ;
+C: <point> point
+: same-over? ( p1 p2 -- ? ) [ over>> ] bi@ = ;
+: same-down? ( p1 p2 -- ? ) [ down>> ] bi@ = ;
+
+TUPLE: line from thru ;
+C: <line> line
+: diagonal? ( line -- ? ) [ from>> ] [ thru>> ] bi [ same-over? ] [ same-down? ] 2bi or not ;
+
+! determine the number of points where at least two lines overlap. ignore diagonal lines.
 : silver ( input -- x*y ) drop f ;
 
 : gold ( input -- n ) drop f ;

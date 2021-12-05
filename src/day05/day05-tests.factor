@@ -3,4 +3,5 @@
 USING: arrays day05 kernel math sequences splitting tools.test ;
 IN: day05.tests
 
-: example ( -- lines ) "" "\n" split ;
+[ f ] [ 0 9 <point> 5 9 <point> <line> diagonal?  ] unit-test
+[ t ] [ 0 0 <point> 8 8 <point> <line> diagonal?  ] unit-test
