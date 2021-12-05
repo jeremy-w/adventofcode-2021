@@ -1,6 +1,6 @@
 ! Copyright (C) 2021 Jeremy W. Sherman.
 ! See http://factorcode.org/license.txt for BSD license.
-USING: arrays day05 kernel math sequences splitting tools.test ;
+USING: arrays day05 kernel math sequences splitting tools.test vectors ;
 IN: day05.tests
 
 [ f ] [ 0 9 <point> 5 9 <point> <line> diagonal?  ] unit-test
@@ -36,3 +36,8 @@ IN: day05.tests
 [ 0 0 <point> 0 2 <point> <line> line-points ] unit-test
 
 { 5 } [ example input-lines>lines overlapping-points length ] unit-test
+
+9 7 <point> 8 8 <point> 7 9 <point> 3array >vector 1array
+[ "9,7 -> 7,9" string>line line-points ] unit-test
+
+{ 12 } [ example input-lines>lines overlapping-points-diag length ] unit-test

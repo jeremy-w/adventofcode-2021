@@ -1,9 +1,10 @@
 ! Copyright (C) 2021 Jeremy W. Sherman.
 ! See http://factorcode.org/license.txt for BSD license.
 USING: accessors arrays assocs combinators grouping
-io.encodings.utf8 io.files kernel math math.parser math.ranges
-math.statistics math.vectors prettyprint sequences sets sorting
-splitting strings tools.continuations vectors vocabs.metadata ;
+io.encodings.utf8 io.files kernel math math.functions
+math.parser math.ranges math.statistics math.vectors prettyprint
+sequences sets sorting splitting strings tools.continuations
+vectors vocabs.metadata ;
 IN: day05
 
 ! each line represents a line from [(over,down), (over,down)] inclusive at both ends.
@@ -32,8 +33,7 @@ C: <line> line
 : diagonal? ( line -- ? ) [ from>> ] [ thru>> ] bi [ same-over? ] [ same-down? ] 2bi or not ;
 ! GOTCHA: split is by single element, not subsequence, so no "split by string" like " -> " as I originally tried.
 : string>line ( string -- line ) " " split >vector 1 swap remove-nth! unpair [ string>point ] bi@ <line> ;
-! XXX: This ignores diagonals for now.
-: line-points ( line -- points ) [ from>> ] [ thru>> ] bi 2dup same-over? [
+: line-points-simple ( line -- points ) [ from>> ] [ thru>> ] bi 2dup same-over? [
     dup over>> -rot
     [ down>> ] bi@ [a,b]
     swap [ swap <point> ] curry map
@@ -42,6 +42,17 @@ C: <line> line
     [ over>> ] bi@ [a,b]
     swap [ <point> ] curry map
     ] if ;
+:: line-points-diag ( line -- points )
+    line from>> :> AB
+    line thru>> :> ab
+    AB over>> :> A AB down>> :> B
+    ab over>> :> a ab down>> :> b
+    a A - abs :> n
+    a A - :> dA
+    b B - :> dB
+    AB 1vector n [ dup last clone [ dA signum + ] change-over [ dB signum + ] change-down suffix! ] times
+    ;
+: line-points ( line -- points ) dup diagonal? [ line-points-diag ] [ line-points-simple ] if ;
 ! t if point falls within line.
 : crosses-point? ( line point -- ? ) swap line-points in? ;
 
@@ -64,10 +75,11 @@ C: <line> line
 ! : line-points ( line -- points ) 1array all-points ;
 
 : overlapping-points ( <line>s -- n ) [ diagonal? ] reject [ line-points ] map concat histogram [ nip 2 < ] assoc-reject keys ;
+: overlapping-points-diag ( <line>s -- n ) [ line-points ] map concat histogram [ nip 2 < ] assoc-reject keys ;
 
 ! determine the number of points where at least two lines overlap. ignore diagonal lines.
 : silver ( input -- x*y ) input-lines>lines overlapping-points length ;
 
-: gold ( input -- n ) drop f ;
+: gold ( input -- n ) input-lines>lines overlapping-points-diag length ;
 
 : day05 ( -- silverAnswer goldAnswer ) "day05" "input.txt" vocab-file-path utf8 file-lines [ silver ] [ gold ] bi ;
