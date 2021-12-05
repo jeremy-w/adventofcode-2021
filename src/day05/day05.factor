@@ -2,7 +2,7 @@
 ! See http://factorcode.org/license.txt for BSD license.
 USING: accessors arrays assocs combinators grouping
 io.encodings.utf8 io.files kernel math math.parser math.ranges
-math.statistics math.vectors prettyprint sequences sets
+math.statistics math.vectors prettyprint sequences sets sorting
 splitting strings tools.continuations vectors vocabs.metadata ;
 IN: day05
 
@@ -42,16 +42,23 @@ C: <line> line
     [ over>> ] bi@ [a,b]
     swap [ <point> ] curry map
     ] if ;
-! TODO: t if point falls within line.
-: in? ( line point -- ? ) [ line-points ] dip in? ;
+! t if point falls within line.
+: crosses-point? ( line point -- ? ) swap line-points in? ;
 
 : input-lines>lines ( lines -- <line>s ) harvest [ string>line ] map ;
 
 ! true if more than one line crosses the point.
-: overlap? ( lines point -- ? ) [ in? ] curry [ find drop ] [ find-last drop ] 2bi = not ;
+: overlap? ( lines point -- ? ) [ crosses-point? ] curry [ find drop ] [ find-last drop ] 2bi = not ;
 
-! TODO: collection of all points, from 0,0 to N,M.
-: all-points ( lines -- seq ) drop { } ;
+: point-pair ( line -- 2array ) [ from>> ] [ thru>> ] bi 2array ;
+: max-over ( lines -- n ) [ point-pair ] map concat [ over>> ] map natural-sort last ;
+: max-down ( lines -- n ) [ point-pair ] map concat [ down>> ] map natural-sort last ;
+! collection of all points, from 0,0 to N,M.
+: all-points ( lines -- seq ) [ max-over [0,b] ] [ max-down [0,b] ] bi
+    [ [ <point> ] curry ] map
+    ! wth, i have no clue how to handle this "foreach foreach" thing.
+    [ map ] map
+    concat ;
 
 : overlapping-points ( <line>s -- n ) [ diagonal? ] reject dup all-points [ dupd overlap? ] filter nip ;
 
