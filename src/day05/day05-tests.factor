@@ -8,3 +8,9 @@ IN: day05.tests
 
 0 9 <point> 1array [ "0,9" string>point ] unit-test
 0 9 <point> 5 9 <point> <line> 1array [ "0,9 -> 5,9" string>line ] unit-test
+
+0 9 <point> 5 9 <point> <line>
+0 9 <point> 2 9 <point> <line>
+2array 1array [ { "0,9 -> 5,9"
+"0,9 -> 2,9"
+"" } input-lines>lines ] unit-test

@@ -30,10 +30,13 @@ C: <point> point
 TUPLE: line from thru ;
 C: <line> line
 : diagonal? ( line -- ? ) [ from>> ] [ thru>> ] bi [ same-over? ] [ same-down? ] 2bi or not ;
+! GOTCHA: split is by single element, not subsequence, so no "split by string" like " -> " as I originally tried.
 : string>line ( string -- line ) " " split >vector 1 swap remove-nth! unpair [ string>point ] bi@ <line> ;
 
+: input-lines>lines ( lines -- <line>s ) harvest [ string>line ] map ;
+
 ! determine the number of points where at least two lines overlap. ignore diagonal lines.
-: silver ( input -- x*y ) drop f ;
+: silver ( input -- x*y ) input-lines>lines . f ;
 
 : gold ( input -- n ) drop f ;
 
