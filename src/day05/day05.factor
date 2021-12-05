@@ -56,8 +56,9 @@ C: <line> line
 ! collection of all points, from 0,0 to N,M.
 : all-points ( lines -- seq ) [ max-over [0,b] ] [ max-down [0,b] ] bi
     [ [ <point> ] curry ] map
-    ! wth, i have no clue how to handle this "foreach foreach" thing.
-    [ map ] map
+    [ [ map ] curry ] map
+    [ dupd call( over -- point ) ] map
+    nip
     concat ;
 
 : overlapping-points ( <line>s -- n ) [ diagonal? ] reject dup all-points [ dupd overlap? ] filter nip ;
