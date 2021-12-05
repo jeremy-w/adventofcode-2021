@@ -1,0 +1,15 @@
+#!/bin/bash
+# usage: scripts/scaffold TWO_DIGIT_NUM
+#
+# Example: scripts/scaffold 06
+#
+# creates src/day06 with empty input.txt and ready-to-go impl & test files.
+
+set -euo pipefail
+
+NUM=$1
+cp -R scripts/dayNN "src/day$NUM"
+cd "src/day$NUM"
+sed -i '' -e "s/dayNN/day$NUM/g" ./*
+mv day{NN,"$NUM"}.factor
+mv day{NN,"$NUM"}-tests.factor
