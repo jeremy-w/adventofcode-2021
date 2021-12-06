@@ -16,8 +16,7 @@ IN: day06
 } case ;
 
 : spawn ( hist -- hist ) dup -1 of [
-        dup -1 of 8 pick at+
-        dup -1 of 6 pick at+
+        dup -1 of [ 8 pick at+ ] [ 6 pick at+ ] bi
         -1 over delete-at
     ] when ;
 
