@@ -8,6 +8,8 @@
 set -euo pipefail
 
 NUM=$1
+# delete any redundant "day", in case invoked like scripts/scaffold day06.
+NUM=${NUM/day/}
 cp -R scripts/dayNN "src/day$NUM"
 cd "src/day$NUM"
 sed -i '' -e "s/dayNN/day$NUM/g" ./*
