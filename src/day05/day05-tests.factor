@@ -41,3 +41,6 @@ IN: day05.tests
 [ "9,7 -> 7,9" string>line line-points ] unit-test
 
 { 12 } [ example input-lines>lines overlapping-points-diag length ] unit-test
+
+{ 5294
+  21698 } [ day05 ] unit-test
