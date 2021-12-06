@@ -1,9 +1,8 @@
 ! Copyright (C) 2021 Jeremy W. Sherman.
 ! See http://factorcode.org/license.txt for BSD license.
-USING: accessors arrays assocs combinators grouping
-io.encodings.utf8 io.files kernel math math.parser math.ranges
-math.statistics math.vectors prettyprint sequences sets
-splitting strings tools.continuations vectors vocabs.metadata ;
+USING: arrays assocs combinators io.encodings.utf8 io.files
+kernel math math.parser math.statistics sequences splitting
+vocabs.metadata ;
 IN: day06
 
 : example ( -- lines ) "3,4,3,1,2" "\n" split first ;
