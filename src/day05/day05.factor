@@ -31,8 +31,7 @@ C: <point> point
 TUPLE: line from thru ;
 C: <line> line
 : diagonal? ( line -- ? ) [ from>> ] [ thru>> ] bi [ same-over? ] [ same-down? ] 2bi or not ;
-! GOTCHA: split is by single element, not subsequence, so no "split by string" like " -> " as I originally tried.
-: string>line ( string -- line ) " " split >vector 1 swap remove-nth! unpair [ string>point ] bi@ <line> ;
+: string>line ( string -- line ) " -> " split-subseq unpair [ string>point ] bi@ <line> ;
 : line-points-simple ( line -- points ) [ from>> ] [ thru>> ] bi 2dup same-over? [
     dup over>> -rot
     [ down>> ] bi@ [a,b]
