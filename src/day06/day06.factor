@@ -8,19 +8,27 @@ IN: day06
 
 : example ( -- lines ) "3,4,3,1,2" "\n" split first ;
 
-: parse ( string -- ns ) "," split [ string>number ] map ;
+: parse ( string -- ns ) "," split [ string>number ] map histogram ;
 
 : age ( n -- nums ) {
     { 0 [ { 6 8 } ] }
     [ 1 - 1array ]
 } case ;
 
-: step ( ns -- ns ) [ age ] map concat ;
+: spawn ( hist -- hist ) dup -1 of [
+        dup -1 of 8 pick at+
+        dup -1 of 6 pick at+
+        -1 over delete-at
+    ] when ;
 
-: simulate ( ns days -- ns ) [ step ] times ;
+: step ( hist -- hist ) [ [ 1 - ] dip ] assoc-map spawn ;
 
-: silver ( input -- x*y ) parse 80 simulate length ;
+: count-fish ( hist -- n ) values sum ;
 
-: gold ( input -- n ) drop f ;
+: simulate ( hist days -- ns ) [ step ] times ;
+
+: silver ( input -- x*y ) parse 80 simulate count-fish ;
+
+: gold ( input -- n ) parse 256 simulate count-fish ;
 
 : day06 ( -- silverAnswer goldAnswer ) "day06" "input.txt" vocab-file-path utf8 file-lines first [ silver ] [ gold ] bi ;
