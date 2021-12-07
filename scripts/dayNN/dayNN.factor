@@ -6,6 +6,8 @@ math.statistics math.vectors prettyprint sequences sets
 splitting strings tools.continuations vectors vocabs.metadata ;
 IN: dayNN
 
+: example ( -- lines ) "" "\n" split ;
+
 : silver ( input -- x*y ) drop f ;
 
 : gold ( input -- n ) drop f ;

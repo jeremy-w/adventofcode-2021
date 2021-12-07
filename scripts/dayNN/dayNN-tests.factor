@@ -3,4 +3,3 @@
 USING: arrays dayNN kernel math sequences splitting tools.test ;
 IN: dayNN.tests
 
-: example ( -- lines ) "" "\n" split ;
