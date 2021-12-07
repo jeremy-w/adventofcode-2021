@@ -58,8 +58,17 @@ that I already know how to use. Alas.
 ## Daily Workflow
 
 - Fire up the GUI from the factor/ directory.
-- "dayNN" dup scaffold-work scaffold-test
-- pbpaste > src/dayNN/input.txt
-- Turn the example into a literal + test in the test file.
-- Copy the previous day to get the basic structure down.
-- Write some code.
+- Before scripts/scaffold:
+  - "dayNN" dup scaffold-work scaffold-test
+  - pbpaste > src/dayNN/input.txt
+  - Copy the previous day to get the basic structure down.
+- Now:
+  - scripts/scaffold 07 # or whatever
+- Fill in the example, work on parsing, write some tests.
+
+## Working Around F Keys
+One of my keyboards sends weird F key codes.
+
+- Help: F1: `\ word help`
+- Refresh: F2: `refresh-all`
+- Errors: F3: `show-error-list`
