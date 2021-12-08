@@ -35,26 +35,16 @@ CONSTANT: canonical-segments H{
 
 : example ( -- lines ) "acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf" "\n" split ;
 
-: larger-example ( -- lines ) "be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb |
-fdgacbe cefdb cefbgd gcbe
-edbfga begcd cbg gc gcadebf fbgde acbgfd abcde gfcbed gfec |
-fcgedb cgb dgebacf gc
-fgaebd cg bdaec gdafb agbcfd gdcbef bgcad gfac gcb cdgabef |
-cg cg fdcagb cbg
-fbegcd cbd adcefb dageb afcb bc aefdc ecdab fgdeca fcdbega |
-efabcd cedba gadfec cb
-aecbfdg fbg gf bafeg dbefa fcge gcbea fcaegb dgceab fcbdga |
-gecf egdcabf bgf bfgea
-fgeab ca afcebg bdacfeg cfaedg gcfdb baec bfadeg bafgc acf |
-gebdcfa ecba ca fadegcb
-dbcfg fgd bdegcaf fgec aegbdf ecdfab fbedc dacgb gdcebf gf |
-cefg dcbef fcge gbcadfe
-bdfegc cbegaf gecbf dfcage bdacg ed bedf ced adcbefg gebcd |
-ed bcgafe cdgba cbgef
-egadfb cdbfeg cegd fecab cgb gbdefca cg fgcdab egfdb bfceg |
-gbdfcae bgc cg cgb
-gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc |
-fgae cfgab fg bagce
+: larger-example ( -- lines ) "be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb | fdgacbe cefdb cefbgd gcbe
+edbfga begcd cbg gc gcadebf fbgde acbgfd abcde gfcbed gfec | fcgedb cgb dgebacf gc
+fgaebd cg bdaec gdafb agbcfd gdcbef bgcad gfac gcb cdgabef | cg cg fdcagb cbg
+fbegcd cbd adcefb dageb afcb bc aefdc ecdab fgdeca fcdbega | efabcd cedba gadfec cb
+aecbfdg fbg gf bafeg dbefa fcge gcbea fcaegb dgceab fcbdga | gecf egdcabf bgf bfgea
+fgeab ca afcebg bdacfeg cfaedg gcfdb baec bfadeg bafgc acf | gebdcfa ecba ca fadegcb
+dbcfg fgd bdegcaf fgec aegbdf ecdfab fbedc dacgb gdcebf gf | cefg dcbef fcge gbcadfe
+bdfegc cbegaf gecbf dfcage bdacg ed bedf ced adcbefg gebcd | ed bcgafe cdgba cbgef
+egadfb cdbfeg cegd fecab cgb gbdefca cg fgcdab egfdb bfceg | gbdfcae bgc cg cgb
+gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce
 " "\n" split ;
 
 TUPLE: display patterns output ;
@@ -63,10 +53,15 @@ C: <display> display
 : parse-pattern ( string -- pattern ) "f" "F" replace [ 1string "day08" lookup-word ] { } map-as >hash-set ;
 : parse-patterns ( string -- patterns ) " " split [ parse-pattern ] map ;
 : parse-display ( line -- display ) " | " split-subseq [ first ] [ second ] bi [ parse-patterns ] bi@ <display> ;
-: parse ( lines -- displays ) [ parse-display ] map ;
+: parse ( lines -- displays ) harvest [ parse-display ] map ;
 
-: silver ( input -- x*y ) drop f ;
+! In the output values, how many times do digits 1, 4, 7, or 8 appear?
+! These are the outputs of cardinality 2, 3, 4, and 7, AKA those that aren't 5 or 6.
+CONSTANT: easy-cardinalities { 2 3 4 7 }
+: easy? ( n -- ? ) easy-cardinalities member? ;
+: easy-output-count ( display -- n ) output>> [ cardinality easy? ] filter length ;
+: silver ( displays -- n ) [ easy-output-count ] map sum ;
 
-: gold ( input -- n ) drop f ;
+: gold ( displays -- n ) drop f ;
 
-: day08 ( -- silverAnswer goldAnswer ) "day08" "input.txt" vocab-file-path utf8 file-lines [ silver ] [ gold ] bi ;
+: day08 ( -- silverAnswer goldAnswer ) "day08" "input.txt" vocab-file-path utf8 file-lines parse [ silver ] [ gold ] bi ;

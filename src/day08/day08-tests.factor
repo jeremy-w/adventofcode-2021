@@ -27,3 +27,6 @@ T{ display
     }
 }
 } [ example parse first ] unit-test
+
+{ 2 } [ { "be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb | fdgacbe cefdb cefbgd gcbe" } parse silver ] unit-test
+{ 26 } [ larger-example parse silver ] unit-test
