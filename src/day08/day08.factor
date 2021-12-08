@@ -94,7 +94,7 @@ CONSTANT: easy-cardinalities { 2 3 4 7 }
     { a b c d e F g } H{ } zip-as
     ;
 : output>number ( canon-output -- n ) reverse [ 10 swap ^ * ] map-index sum ;
-: decode-output-number ( display -- n ) dup patterns>> infer-map-to-canon-segments [ decode-pattern ] with [ output>> ] dip map output>number ;
+: decode-output-number ( display -- n ) dup patterns>> infer-map-to-canon-segments [ output>> ] dip [ swap decode-pattern ] curry map output>number ;
 ! For each entry, determine all of the wire/segment connections and decode the four-digit output values. What do you get if you add up all of the output values?
 : gold ( displays -- n ) [ decode-output-number ] map sum ;
 

@@ -46,3 +46,4 @@ T{ display
 { e } [ example parse first patterns>> find-canon-b ] unit-test
 { F } [ example parse first patterns>> find-canon-d ] unit-test
 { H{ { d a } { e b } { a c } { F d } { g e } { b F } { c g } } } [ example parse first patterns>> infer-map-to-canon-segments ] unit-test
+{ 5353 } [ example parse gold ] unit-test
