@@ -1,20 +1,20 @@
 ! Copyright (C) 2021 Jeremy W. Sherman.
 ! See http://factorcode.org/license.txt for BSD license.
 USING: accessors arrays assocs combinators grouping hash-sets
-io.encodings.utf8 io.files kernel math math.parser math.ranges
-math.statistics math.vectors prettyprint sequences sets
-splitting strings tools.continuations vectors vocabs.metadata
-words ;
+io.encodings.utf8 io.files kernel math math.functions
+math.parser math.ranges math.statistics math.vectors prettyprint
+sequences sets splitting strings tools.continuations vectors
+vocabs.metadata words ;
 IN: day08
 
 ! The 7 segments.
-CONSTANT: a CHAR: a
-CONSTANT: b CHAR: b
-CONSTANT: c CHAR: c
-CONSTANT: d CHAR: d
-CONSTANT: e CHAR: e
-CONSTANT: F CHAR: f ! capitalize to avoid clobbering f for false
-CONSTANT: g CHAR: g
+SYMBOL: a
+SYMBOL: b
+SYMBOL: c
+SYMBOL: d
+SYMBOL: e
+SYMBOL: F ! capitalize to avoid clobbering f for false
+SYMBOL: g
 
 ! The canonical mapping from digits to segments.
 CONSTANT: canonical-segments H{
@@ -62,6 +62,12 @@ CONSTANT: easy-cardinalities { 2 3 4 7 }
 : easy-output-count ( display -- n ) output>> [ cardinality easy? ] filter length ;
 : silver ( displays -- n ) [ easy-output-count ] map sum ;
 
-: gold ( displays -- n ) drop f ;
+: canon-pattern ( map-to-canon pattern -- canon-pattern ) members [ dupd of ] map nip >hash-set ;
+: decode-pattern ( map-to-canon pattern -- n ) canon-pattern canonical-segments value-at ;
+: infer-map-to-canon-segments ( patterns -- assoc ) drop H{ } ;
+: output>number ( canon-output -- n ) reverse [ 10 swap ^ * ] map-index sum ;
+: decode-output-number ( display -- n ) dup patterns>> infer-map-to-canon-segments [ decode-pattern ] with [ output>> ] dip map output>number ;
+! For each entry, determine all of the wire/segment connections and decode the four-digit output values. What do you get if you add up all of the output values?
+: gold ( displays -- n ) [ decode-output-number ] map sum ;
 
 : day08 ( -- silverAnswer goldAnswer ) "day08" "input.txt" vocab-file-path utf8 file-lines parse [ silver ] [ gold ] bi ;

@@ -30,3 +30,22 @@ T{ display
 
 { 2 } [ { "be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb | fdgacbe cefdb cefbgd gcbe" } parse silver ] unit-test
 { 26 } [ larger-example parse silver ] unit-test
+
+{ 5 } [ H{
+    { d a }
+    { e b }
+    { a c }
+    { F d }
+    { g e }
+    { b F }
+    { c g }
+} HS{ c d F e b } decode-pattern ] unit-test
+{ H{
+    { d a }
+    { e b }
+    { a c }
+    { F d }
+    { g e }
+    { b F }
+    { c g }
+} } [ example parse first patterns>> infer-map-to-canon-segments ] unit-test
