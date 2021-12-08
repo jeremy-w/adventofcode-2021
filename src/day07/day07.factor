@@ -1,7 +1,8 @@
 ! Copyright (C) 2021 Jeremy W. Sherman.
 ! See http://factorcode.org/license.txt for BSD license.
 USING: io.encodings.utf8 io.files kernel math math.functions
-math.parser sequences sorting splitting vocabs.metadata ;
+math.order math.parser sequences sorting splitting
+vocabs.metadata ;
 IN: day07
 
 : parse ( line -- ns ) "," split [ string>number ] map natural-sort ;
