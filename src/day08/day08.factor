@@ -64,6 +64,16 @@ CONSTANT: easy-cardinalities { 2 3 4 7 }
 
 : canon-pattern ( map-to-canon pattern -- canon-pattern ) members [ dupd of ] map nip >hash-set ;
 : decode-pattern ( map-to-canon pattern -- n ) canon-pattern canonical-segments value-at ;
+: one ( patterns -- pattern ) [ cardinality 2 = ] find nip ;
+: four ( patterns -- pattern ) [ cardinality 4 = ] find nip ;
+: seven ( patterns -- pattern ) [ cardinality 3 = ] find nip ;
+: eight ( patterns -- pattern ) [ cardinality 7 = ] find nip ;
+:: nine ( patterns -- pattern )
+    patterns [ four ] [ seven ] bi union :> all-but-eg
+    patterns [ cardinality 6 = ] filter :> six-segments
+    six-segments [ all-but-eg diff cardinality 1 = ] find nip ;
+: find-canon-e ( patterns -- pattern ) [ eight ] [ nine ] bi diff members first ;
+: find-canon-a ( patterns -- segment ) [ seven ] [ one ] bi diff members first ;
 : infer-map-to-canon-segments ( patterns -- assoc ) drop H{ } ;
 : output>number ( canon-output -- n ) reverse [ 10 swap ^ * ] map-index sum ;
 : decode-output-number ( display -- n ) dup patterns>> infer-map-to-canon-segments [ decode-pattern ] with [ output>> ] dip map output>number ;
