@@ -79,6 +79,7 @@ CONSTANT: easy-cardinalities { 2 3 4 7 }
 : two ( patterns -- pattern ) [ [ cardinality 5 = ] filter ] [ find-canon-e ] bi [ swap in? ] curry find nip ;
 : find-canon-f ( patterns -- segment ) [ one ] [ nine ] [ two ] tri diff intersect sole-segment ;
 : find-canon-c ( patterns -- segment ) [ one ] [ find-canon-f ] bi over delete sole-segment ;
+: find-canon-b ( patterns -- segment ) [ eight ] [ two ] [ find-canon-f ] tri over adjoin diff sole-segment ;
 : infer-map-to-canon-segments ( patterns -- assoc ) drop H{ } ;
 : output>number ( canon-output -- n ) reverse [ 10 swap ^ * ] map-index sum ;
 : decode-output-number ( display -- n ) dup patterns>> infer-map-to-canon-segments [ decode-pattern ] with [ output>> ] dip map output>number ;
