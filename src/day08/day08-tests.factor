@@ -34,4 +34,5 @@ T{ display
 { 5 } [ H{ { d a } { e b } { a c } { F d } { g e } { b F } { c g } } HS{ c d F e b } decode-pattern ] unit-test
 { d } [ example parse first patterns>> find-canon-a ] unit-test
 { g } [ example parse first patterns>> find-canon-e ] unit-test
+{ c } [ example parse first patterns>> find-canon-g ] unit-test
 ! { H{ { d a } { e b } { a c } { F d } { g e } { b F } { c g } } } [ example parse first patterns>> infer-map-to-canon-segments ] unit-test

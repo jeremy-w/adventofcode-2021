@@ -72,8 +72,10 @@ CONSTANT: easy-cardinalities { 2 3 4 7 }
     patterns [ four ] [ seven ] bi union :> all-but-eg
     patterns [ cardinality 6 = ] filter :> six-segments
     six-segments [ all-but-eg diff cardinality 1 = ] find nip ;
-: find-canon-e ( patterns -- pattern ) [ eight ] [ nine ] bi diff members first ;
-: find-canon-a ( patterns -- segment ) [ seven ] [ one ] bi diff members first ;
+: sole-segment ( pattern -- segment ) members first ;
+: find-canon-e ( patterns -- pattern ) [ eight ] [ nine ] bi diff sole-segment ;
+: find-canon-a ( patterns -- segment ) [ seven ] [ one ] bi diff sole-segment ;
+: find-canon-g ( patterns -- segment ) { [ eight ] [ find-canon-e 1array >hash-set ] [ seven ] [ four ] } cleave union union diff sole-segment ;
 : infer-map-to-canon-segments ( patterns -- assoc ) drop H{ } ;
 : output>number ( canon-output -- n ) reverse [ 10 swap ^ * ] map-index sum ;
 : decode-output-number ( display -- n ) dup patterns>> infer-map-to-canon-segments [ decode-pattern ] with [ output>> ] dip map output>number ;
