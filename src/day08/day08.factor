@@ -78,10 +78,21 @@ CONSTANT: easy-cardinalities { 2 3 4 7 }
 : find-canon-g ( patterns -- segment ) { [ eight ] [ find-canon-e 1array >hash-set ] [ seven ] [ four ] } cleave union union diff sole-segment ;
 : two ( patterns -- pattern ) [ [ cardinality 5 = ] filter ] [ find-canon-e ] bi [ swap in? ] curry find nip ;
 : find-canon-f ( patterns -- segment ) [ one ] [ nine ] [ two ] tri diff intersect sole-segment ;
-: find-canon-c ( patterns -- segment ) [ one ] [ find-canon-f ] bi over delete sole-segment ;
-: find-canon-b ( patterns -- segment ) [ eight ] [ two ] [ find-canon-f ] tri over adjoin diff sole-segment ;
-: find-canon-d ( patterns -- segment ) { [ four ]  [ find-canon-b ] [ find-canon-c ] [ find-canon-f ] } cleave 3array >hash-set diff sole-segment ;
-: infer-map-to-canon-segments ( patterns -- assoc ) drop H{ } ;
+: find-canon-c ( patterns -- segment ) [ one clone ] [ find-canon-f ] bi over delete sole-segment ;
+: find-canon-b ( patterns -- segment ) [ eight ] [ two clone ] [ find-canon-f ] tri over adjoin diff sole-segment ;
+: find-canon-d ( patterns -- segment ) { [ four ] [ find-canon-b ] [ find-canon-c ] [ find-canon-f ] } cleave 3array >hash-set diff sole-segment ;
+: infer-map-to-canon-segments ( patterns -- assoc )
+    {
+    [ find-canon-a ]
+    [ find-canon-b ]
+    [ find-canon-c ]
+    [ find-canon-d ]
+    [ find-canon-e ]
+    [ find-canon-f ]
+    [ find-canon-g ]
+    } [ dupd clone call( x -- x ) ] map nip
+    { a b c d e F g } H{ } zip-as
+    ;
 : output>number ( canon-output -- n ) reverse [ 10 swap ^ * ] map-index sum ;
 : decode-output-number ( display -- n ) dup patterns>> infer-map-to-canon-segments [ decode-pattern ] with [ output>> ] dip map output>number ;
 ! For each entry, determine all of the wire/segment connections and decode the four-digit output values. What do you get if you add up all of the output values?

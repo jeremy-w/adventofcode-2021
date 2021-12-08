@@ -32,6 +32,12 @@ T{ display
 { 26 } [ larger-example parse silver ] unit-test
 
 { 5 } [ H{ { d a } { e b } { a c } { F d } { g e } { b F } { c g } } HS{ c d F e b } decode-pattern ] unit-test
+{ HS{ a b } } [ example parse first patterns>> one ] unit-test
+{ HS{ e a F b  } } [ example parse first patterns>> four ] unit-test
+{ HS{ d a b } } [ example parse first patterns>> seven ] unit-test
+{ HS{ a c e d g F b } } [ example parse first patterns>> eight ] unit-test
+{ HS{ d e a F b c } } [ example parse first patterns>> nine ] unit-test
+{ HS{ d a F g c } } [ example parse first patterns>> two ] unit-test
 { d } [ example parse first patterns>> find-canon-a ] unit-test
 { g } [ example parse first patterns>> find-canon-e ] unit-test
 { c } [ example parse first patterns>> find-canon-g ] unit-test
@@ -39,4 +45,4 @@ T{ display
 { a } [ example parse first patterns>> find-canon-c ] unit-test
 { e } [ example parse first patterns>> find-canon-b ] unit-test
 { F } [ example parse first patterns>> find-canon-d ] unit-test
-! { H{ { d a } { e b } { a c } { F d } { g e } { b F } { c g } } } [ example parse first patterns>> infer-map-to-canon-segments ] unit-test
+{ H{ { d a } { e b } { a c } { F d } { g e } { b F } { c g } } } [ example parse first patterns>> infer-map-to-canon-segments ] unit-test
