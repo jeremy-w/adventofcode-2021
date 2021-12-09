@@ -12,16 +12,29 @@ IN: day09
 8767896789
 9899965678" "\n" split ;
 
-! A heightmap is just an assoc { over down } => height.
+! A heightmap is just an assoc { over down } => height, which we call a "height-point" or "hp".
+: height ( hp -- height ) second ;
 
 : parse-row ( string down -- heightmap )
     swap [ 1string string>number ] map
     swap [ 2array swap 2array ] curry map-index
     >hashtable ;
-: parse ( lines -- heightmap ) [ parse-row ] map-index assoc-combine ;
+: parse ( lines -- heightmap ) harvest [ parse-row ] map-index assoc-combine ;
 
-: silver ( input -- x*y ) drop f ;
+: neighbor-of? ( maybe-neighbor-point center-point -- ? )
+    v- [ abs ] map [ { 0 1 } = ] [ { 1 0 } = ] bi or ;
+: neighbors ( heightmap point -- neighbor-heightmap )
+    [ nip neighbor-of? ] curry assoc-filter ;
+: low-point? ( heightmap point height -- unchanged-heightmap ? )
+    [ dupd neighbors ] dip
+    [ < nip ] curry
+    assoc-filter assoc-empty? ;
+: low-points ( heightmap -- low-only-heightmap )
+    dup [ low-point? ] assoc-filter nip ;
 
-: gold ( input -- n ) drop f ;
+: risk-level ( nheight -- nrisk ) 1 + ;
+: silver ( heightmap -- low-point-risk-level-sum ) low-points values [ risk-level ] map sum ;
 
-: day09 ( -- silverAnswer goldAnswer ) "day09" "input.txt" vocab-file-path utf8 file-lines [ silver ] [ gold ] bi ;
+: gold ( heightmap -- n ) drop f ;
+
+: day09 ( -- silverAnswer goldAnswer ) "day09" "input.txt" vocab-file-path utf8 file-lines parse [ silver ] [ gold ] bi ;
