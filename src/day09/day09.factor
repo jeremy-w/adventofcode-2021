@@ -24,7 +24,8 @@ IN: day09
 : neighbor-of? ( maybe-neighbor-point center-point -- ? )
     v- [ abs ] map [ { 0 1 } = ] [ { 1 0 } = ] bi or ;
 : neighbors ( heightmap point -- neighbor-heightmap )
-    [ nip neighbor-of? ] curry assoc-filter ;
+    { { 1 0 } { -1 0 } { 0 1 } { 0 -1 } } swap [ v+ ] curry map
+    swap extract-keys sift-values ;
 : low-point? ( heightmap point height -- unchanged-heightmap ? )
     [ dupd neighbors ] dip
     [ < nip ] curry
@@ -37,4 +38,5 @@ IN: day09
 
 : gold ( heightmap -- n ) drop f ;
 
-: day09 ( -- silverAnswer goldAnswer ) "day09" "input.txt" vocab-file-path utf8 file-lines parse [ silver ] [ gold ] bi ;
+: input-lines ( -- lines ) "day09" "input.txt" vocab-file-path utf8 file-lines ;
+: day09 ( -- silverAnswer goldAnswer ) input-lines parse [ silver ] [ gold ] bi ;
