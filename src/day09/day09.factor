@@ -1,9 +1,10 @@
 ! Copyright (C) 2021 Jeremy W. Sherman.
 ! See http://factorcode.org/license.txt for BSD license.
 USING: accessors arrays assocs combinators grouping hashtables
-io.encodings.utf8 io.files kernel math math.parser math.ranges
-math.statistics math.vectors prettyprint sequences sets
-splitting strings tools.continuations vectors vocabs.metadata ;
+io io.encodings.utf8 io.files kernel math math.order math.parser
+math.ranges math.statistics math.vectors prettyprint sequences
+sets sorting splitting strings tools.continuations vectors
+vocabs.metadata ;
 IN: day09
 
 : example ( -- lines ) "2199943210
@@ -36,7 +37,42 @@ IN: day09
 : risk-level ( nheight -- nrisk ) 1 + ;
 : silver ( heightmap -- low-point-risk-level-sum ) low-points values [ risk-level ] map sum ;
 
-: gold ( heightmap -- n ) drop f ;
+! A basin is a flood-fill from a point. It's blocked by 9s. We report a basin as a seq of points.
+:: basin ( heightmap low-point -- points )
+    low-point 1vector :> points
+    low-point 1array :> batch!
+    ! XXX: spent forever debugging that i was using |at| rather than |member?| in the assoc-filter quot, because i'd mixed up the type of points.
+    ! it would just keep looping, seemingly not even running the body - break never stopped it.
+    ! i ultimately manually unrolled it a couple steps to see it going wrong, and stuck a break in the assoc-filter quot once i got wise to the problem.
+
+    ! as an added complication, breakpointing in a word using locals is
+    ! basically unreadable; i didn't want to learn to understand the guts of how
+    ! locals are implemented, but you need to do that to really understand the
+    ! data flow. the locals seemed to be ref'd by number, not name, which makes
+    ! it even harder to follow. apparently macros might benefit from the notion
+    ! of source-maps.
+    [
+        ! "batch: " write batch .
+        ! "points: " write points .
+        batch empty? not
+        ! "will continue: " write dup .
+    ] [
+        heightmap batch [ dupd neighbors ] map nip assoc-combine
+        [ 9 < swap points member? not and ] assoc-filter
+        keys batch!
+        points batch append!
+        ! "next batch: " write batch .
+        drop
+    ] while
+    points ;
+: basins ( heightmap low-points -- points-seq )
+    [ dupd basin ] map nip ;
+
+! Find the three largest basins and multiply their sizes together.
+: gold ( heightmap -- n )
+    dup low-points keys basins
+    [ [ length ] bi@ >=< ] sort
+    3 head [ length ] map product ;
 
 : input-lines ( -- lines ) "day09" "input.txt" vocab-file-path utf8 file-lines ;
 : day09 ( -- silverAnswer goldAnswer ) input-lines parse [ silver ] [ gold ] bi ;

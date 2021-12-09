@@ -44,3 +44,6 @@ IN: day09.tests
 
 { 15 } [ example parse silver ] unit-test
 { 526 } [ day09 drop ] unit-test
+
+{ V{ { 0 0 } { 1 0 } { 0 1 } } } [ example parse { 0 0 } basin ] unit-test
+{ 1134 } [ example parse gold ] unit-test
