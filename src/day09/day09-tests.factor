@@ -40,5 +40,7 @@ IN: day09.tests
     { { 0 0 } 2 } { { 1 0 } 1 }
     { { 0 1 } 3 } { { 1 1 } 9 }
     } { 1 1 } 9 low-point? ] unit-test
+{ f } [ input-lines parse { 0 1 } 9  low-point? nip ] unit-test
 
 { 15 } [ example parse silver ] unit-test
+{ 526 } [ day09 drop ] unit-test

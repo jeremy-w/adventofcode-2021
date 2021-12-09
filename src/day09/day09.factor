@@ -28,7 +28,7 @@ IN: day09
     swap extract-keys sift-values ;
 : low-point? ( heightmap point height -- unchanged-heightmap ? )
     [ dupd neighbors ] dip
-    [ < nip ] curry
+    [ <= nip ] curry
     assoc-filter assoc-empty? ;
 : low-points ( heightmap -- low-only-heightmap )
     dup [ low-point? ] assoc-filter nip ;
