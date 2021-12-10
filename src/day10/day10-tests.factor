@@ -84,3 +84,9 @@ IN: day10.tests
 [ "<([{}])" parse ] unit-test
 
 ! corrupt chunks:
+<parsing>
+    "<([{>]]]]" >>src
+    V{ CHAR: < CHAR: ( CHAR: [ CHAR: { } >>open
+    CHAR: > >>mismatch
+1array
+[ "<([{>]]]]" parse ] unit-test

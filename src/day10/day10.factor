@@ -33,6 +33,7 @@ ERROR: unexpected-char char ;
     if ;
 : parse-char ( parsing char -- parsing )
     {
+        { [ over corrupted? ] [ drop ] }
         { [ dup brackets key? ] [ parse-open-action ] }
         { [ dup brackets value? ] [ parse-close-action ] }
         [ unexpected-char ]
