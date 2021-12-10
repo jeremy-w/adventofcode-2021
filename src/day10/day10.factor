@@ -22,7 +22,7 @@ CONSTANT: bracket-value H{
 
 TUPLE: parsing { src initial: "" } { open initial: V{ } } { mismatch initial: f } ;
 : <parsing> ( -- parsing ) parsing new [ clone ] change-open ;
-: incomplete? ( parsing -- ? ) open>> empty? ;
+: incomplete? ( parsing -- ? ) open>> empty? not ;
 : corrupted? ( parsing -- ? ) mismatch>> ;
 ERROR: unexpected-char char ;
 : parse-open-action ( parsing char -- parsing ) over open>> push ;
