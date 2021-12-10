@@ -21,9 +21,23 @@ CONSTANT: bracket-value H{
 }
 
 TUPLE: parsing { src initial: "" } { open initial: V{ } } { mismatch initial: f } ;
-C: <parsing> parsing
+: <parsing> ( -- parsing ) parsing new ;
 : incomplete? ( parsing -- ? ) open>> empty? ;
 : corrupted? ( parsing -- ? ) mismatch>> ;
+ERROR: unexpected-char char ;
+: parse-open-action ( parsing char -- parsing ) over open>> push ;
+: parse-close-action ( parsing char -- parsing ) drop ;
+: parse-char ( parsing char -- parsing )
+    {
+        { [ dup brackets key? ] [ parse-open-action ] }
+        { [ dup brackets value? ] [ parse-close-action ] }
+        [ unexpected-char ]
+    } cond
+    ;
+: parse ( string -- parsing )
+    <parsing>
+        over >>src
+    [ parse-char ] reduce ;
 
 : example ( -- lines ) "[({(<(())[]>[[{[]{<()<>>
 [(()[<>])]({[<{<<[]>>(
