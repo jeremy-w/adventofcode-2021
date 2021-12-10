@@ -76,3 +76,11 @@ IN: day10.tests
 1array
 [ "(((((((((())))))))))" parse ] unit-test
 
+! incomplete chunks:
+<parsing>
+    "<([{}])" >>src
+    V{ CHAR: < } >>open
+1array
+[ "<([{}])" parse ] unit-test
+
+! corrupt chunks:
