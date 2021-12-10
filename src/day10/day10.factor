@@ -62,7 +62,20 @@ ERROR: unexpected-char char ;
     [ score-corrupt ] map
     sum ;
 
-: gold ( parsings -- n ) drop f ;
+: completion ( incomplete-parsing -- string )
+    open>> clone reverse [ brackets at ] "" map-as ;
+CONSTANT: completion-bracket-value H{
+    { CHAR: ) 1 }
+    { CHAR: ] 2 }
+    { CHAR: } 3 }
+    { CHAR: > 4 }
+}
+: score-completion ( string -- n )
+    0 [ [ 5 * ] dip completion-bracket-value at + ] reduce ;
+: gold ( parsings -- n )
+    [ corrupted? ] reject
+    [ completion score-completion ] map
+    median ;
 
 : day10 ( -- silverAnswer goldAnswer )
     "day10" "input.txt" vocab-file-path

@@ -94,3 +94,8 @@ IN: day10.tests
 ! silver:
 { 26397 } [ example [ parse ] map silver ] unit-test
 { 345441 } [ day10 drop ] unit-test
+
+! gold:
+{ 294 } [ "])}>" score-completion ] unit-test
+{ 288957 } [ example [ parse ] map gold ] unit-test
+{ 3235371166 } [ day10 nip ] unit-test
