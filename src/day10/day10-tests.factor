@@ -20,7 +20,7 @@ IN: day10.tests
 [
     <parsing>
         "()" >>src
-    CHAR: ( parse-char
+        CHAR: ( parse-char
 ] unit-test
 
 ! matching close bracket:
@@ -31,8 +31,11 @@ IN: day10.tests
     <parsing>
         "()" >>src
         V{ CHAR: ( } >>open
-    CHAR: ) parse-char
+        CHAR: ) parse-char
 ] unit-test
+
+! TODO: test bogus close bracket
+! TODO: skip doing anything further if mismatch is already set
 
 ! valid chunks:
 ! { X } [ "()" parse ] unit-test
