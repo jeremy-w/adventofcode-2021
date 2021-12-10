@@ -48,10 +48,31 @@ IN: day10.tests
 ] unit-test
 
 ! valid chunks:
-! { X } [ "()" parse ] unit-test
-! { X } [ "[]" parse ] unit-test
-! { X } [ "([])" parse ] unit-test
-! { X } [ "{()()()}" parse ] unit-test
-! { X } [ "<([{}])>" parse ] unit-test
-! { X } [ "[<>({}){}[([])<>]]" parse ] unit-test
-! { X } [ "(((((((((())))))))))" parse ] unit-test
+<parsing>
+    "()" >>src
+1array
+[ "()" parse ] unit-test
+<parsing>
+    "[]" >>src
+1array [ "[]" parse ] unit-test
+<parsing>
+    "([])" >>src
+1array
+[ "([])" parse ] unit-test
+<parsing>
+    "{()()()}" >>src
+1array
+[ "{()()()}" parse ] unit-test
+<parsing>
+    "<([{}])>" >>src
+1array
+[ "<([{}])>" parse ] unit-test
+<parsing>
+    "[<>({}){}[([])<>]]" >>src
+1array
+[ "[<>({}){}[([])<>]]" parse ] unit-test
+<parsing>
+    "(((((((((())))))))))" >>src
+1array
+[ "(((((((((())))))))))" parse ] unit-test
+
