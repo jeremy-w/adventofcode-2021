@@ -90,3 +90,7 @@ IN: day10.tests
     CHAR: > >>mismatch
 1array
 [ "<([{>]]]]" parse ] unit-test
+
+! silver:
+{ 26397 } [ example [ parse ] map silver ] unit-test
+{ 345441 } [ day10 drop ] unit-test

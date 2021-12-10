@@ -54,8 +54,18 @@ ERROR: unexpected-char char ;
 <{([([[(<>()){}]>(<<{{
 <{([{{}}[<[[[<>{}]]]>[]]" "\n" split ;
 
-: silver ( input -- x*y ) drop f ;
+: score-corrupt ( corrupt-parsing -- n )
+    mismatch>> bracket-value at ;
 
-: gold ( input -- n ) drop f ;
+: silver ( parsings -- x*y )
+    [ corrupted? ] filter
+    [ score-corrupt ] map
+    sum ;
 
-: day10 ( -- silverAnswer goldAnswer ) "day10" "input.txt" vocab-file-path utf8 file-lines [ silver ] [ gold ] bi ;
+: gold ( parsings -- n ) drop f ;
+
+: day10 ( -- silverAnswer goldAnswer )
+    "day10" "input.txt" vocab-file-path
+    utf8 file-lines
+    [ parse ] map
+    [ silver ] [ gold ] bi ;
