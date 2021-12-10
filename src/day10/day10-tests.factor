@@ -4,6 +4,7 @@ USING: accessors arrays day10 kernel math sequences splitting
 tools.test ;
 IN: day10.tests
 
+! open bracket:
 <parsing>
     "()" >>src
     V{ CHAR: ( } >>open
@@ -12,6 +13,17 @@ IN: day10.tests
     <parsing>
         "()" >>src
     CHAR: ( parse-char
+] unit-test
+
+! matching close bracket:
+<parsing>
+    "()" >>src
+1array
+[
+    <parsing>
+        "()" >>src
+        V{ CHAR: ( } >>open
+    CHAR: ) parse-char
 ] unit-test
 
 ! valid chunks:

@@ -26,14 +26,17 @@ TUPLE: parsing { src initial: "" } { open initial: V{ } } { mismatch initial: f 
 : corrupted? ( parsing -- ? ) mismatch>> ;
 ERROR: unexpected-char char ;
 : parse-open-action ( parsing char -- parsing ) over open>> push ;
-: parse-close-action ( parsing char -- parsing ) drop ;
+: parse-close-action ( parsing char -- parsing )
+    dup brackets value-at pick open>> last =
+    [ drop dup open>> pop* ]
+    [ >>mismatch ]
+    if ;
 : parse-char ( parsing char -- parsing )
     {
         { [ dup brackets key? ] [ parse-open-action ] }
         { [ dup brackets value? ] [ parse-close-action ] }
         [ unexpected-char ]
-    } cond
-    ;
+    } cond ;
 : parse ( string -- parsing )
     <parsing>
         over >>src
