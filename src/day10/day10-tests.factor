@@ -34,8 +34,18 @@ IN: day10.tests
         CHAR: ) parse-char
 ] unit-test
 
-! TODO: test bogus close bracket
-! TODO: skip doing anything further if mismatch is already set
+! mismatched close bracket:
+<parsing>
+    "(}" >>src
+    V{ CHAR: ( } >>open
+    CHAR: } >>mismatch
+1array
+[
+    <parsing>
+        "(}" >>src
+        V{ CHAR: ( } >>open
+        CHAR: } parse-char
+] unit-test
 
 ! valid chunks:
 ! { X } [ "()" parse ] unit-test
