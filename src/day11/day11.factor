@@ -37,21 +37,41 @@ IN: day11
     [ dupd '[ _ 2array ] map ] map nip
     ;
 
-! test case in listener: H{ { { 0 0 } 2 } { { 1 1 } 0 } } { { 1 1 } } purty
+! test case in listener: H{ { { 0 0 } 2 } { { 1 1 } 0 } } HS{ { 1 1 } } purty
 :: purty ( hp flashed-points -- )
     hp keys supremum first2 square-indexes
     [ [ dup
-        flashed-points member?
+        flashed-points in?
            [ hp at H{ { font-style bold } } [ pprint ] with-style ]
            [ hp at pprint ] if
         ] each "\n" write ] each
     ;
 
-: step ( hp -- hp flashed-points )
-    0 ;
+:: step ( hp -- hp flashed-points )
+    hp [ 1 + ] assoc-map :> hp
+    HS{ } :> flashed-points
+    [ hp [
+        [ flashed-points in? not ] [ 9 > ] bi* and
+        ] assoc-filter assoc-empty? not ] [
+        ! grab all the 9s not already in flashed-points and store as newly-flashed
+        hp [
+            [ flashed-points in? not ] [ 9 > ] bi* and
+        ] assoc-filter keys :> newly-flashed
+        ! incr their neighbors
+        newly-flashed [
+            hp swap neighbors keys
+            [ hp swap [ 1 + ] change-at ] each
+        ] each
+        ! add the newly-flashed to flashed-points
+        flashed-points newly-flashed adjoin-all
+    ] while
+    ! reset 9 > to 0 in hp before returning
+    hp [ dup 9 > [ drop 0 ] when ] assoc-map :> hp
+    hp flashed-points
+    ;
 
 ! how many total flashes after 100 steps?
-: silver ( hp -- x*y ) 0 swap 100 [ step '[ _ + ] dip ] times drop ;
+: silver ( hp -- x*y ) 0 swap 100 [ step '[ _ cardinality + ] dip ] times drop ;
 
 : gold ( hp -- n ) drop f ;
 
