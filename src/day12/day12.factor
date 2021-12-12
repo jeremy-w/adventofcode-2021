@@ -68,6 +68,28 @@ M: walk clone
 
 : silver ( walk -- x*y ) distinct-paths length ;
 
-: gold ( walk -- n ) drop f ;
+: explore-long ( walk -- walks )
+    dup current-cave "end" = [ drop { } ] [
+        dup [ current-cave ] [ map>> at ] bi >hash-set
+        over ! walk on top - need to do a lot with it…
+        path>> [ big-cave? ] reject >hash-set
+        ! TODO: throw them all out (as before), BUT ALSO keep each one, but only if no small-cave is already duplicated.
+        diff members
+        [ [ dup clone ] [ travel ] bi* ] map
+        nip
+    ] if
+    ;
+
+: distinct-long-paths ( walk -- paths )
+    dup explore-long dup empty? [
+        drop path>> 1array
+    ] [
+        nip
+        [ distinct-paths ] map concat
+    ] if
+    [ last "end" = ] filter
+    ;
+
+: gold ( walk -- n ) distinct-long-paths length ;
 
 : day12 ( -- silverAnswer goldAnswer ) "day12" "input.txt" vocab-file-path utf8 file-lines parse [ silver ] [ gold ] bi ;
