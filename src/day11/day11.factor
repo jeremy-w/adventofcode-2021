@@ -80,6 +80,9 @@ SYMBOL: F
 ! how many total flashes after 100 steps?
 : silver ( hp -- x*y ) 0 swap 100 [ step '[ _ + ] dip ] times drop ;
 
-: gold ( hp -- n ) drop f ;
+: gold ( hp -- n ) 0 swap 0 [ 100 = not ] [
+    [ 1 + ] dip
+    step
+] while drop  ;
 
 : day11 ( -- silverAnswer goldAnswer ) "day11" "input.txt" vocab-file-path utf8 file-lines parse [ silver ] [ gold ] bi ;

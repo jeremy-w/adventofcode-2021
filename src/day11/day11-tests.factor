@@ -41,3 +41,6 @@ IN: day11.tests
 
 { 1656 } [ example parse silver ] unit-test
 { 1608 } [ day11 drop ] unit-test
+
+{ 195 } [ example parse gold ] unit-test
+{ 214 } [ day11 nip ] unit-test
