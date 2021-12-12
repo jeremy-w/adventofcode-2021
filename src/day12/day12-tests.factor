@@ -12,5 +12,8 @@ IN: day12.tests
                 { "start" V{ "A" "b" } }
             }
         }
+        { path
+            V{ "start" }
+        }
     }
 } [ example parse ] unit-test

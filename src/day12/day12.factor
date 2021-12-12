@@ -15,7 +15,7 @@ b-d
 A-end
 b-end" "\n" split ;
 
-TUPLE: walk { map initial: H{ } } { path initial: V{ } } ;
+TUPLE: walk { map initial: H{ } } { path initial: V{ "start" } } ;
 : <walk> ( -- walk )
     walk new
         [ clone ] change-map
@@ -41,13 +41,25 @@ M: walk clone
 : parse ( lines -- walk )
     <walk> [ parse-line ] reduce ;
 
-: explore ( walk from -- walks )
-    dup "end" = [ 2drop { } ] [
-        over map>> at >hash-set
+: current-cave ( walk -- cave )
+    path>> ?last dup "start" ? ;
+
+: explore ( walk -- walks )
+    dup current-cave "end" = [ drop { } ] [
+        dup [ current-cave ] [ map>> at ] bi >hash-set
         over path>> [ big-cave? ] reject >hash-set
         diff members
         [ [ dup clone ] [ travel ] bi* ] map
         nip
+    ] if
+    ;
+
+: distinct-paths ( walk -- paths )
+    dup explore dup empty? [
+        drop path>> 1array
+    ] [
+        nip
+        [ distinct-paths ] map concat
     ] if
     ;
 
