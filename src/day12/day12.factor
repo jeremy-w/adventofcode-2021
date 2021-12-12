@@ -22,7 +22,9 @@ TUPLE: walk { map initial: H{ } } { path initial: V{ "start" } } ;
         [ clone ] change-path ;
 
 : add-route ( walk from to -- walk )
-    swap '[ _ _ pick push-at ] change-map ;
+    3dup
+    swap '[ _ _ pick push-at ] change-map drop
+    '[ _ _ pick push-at ] change-map ;
 
 : travel ( walk to -- walk )
     '[ _ over push ] change-path ;
@@ -61,10 +63,11 @@ M: walk clone
         nip
         [ distinct-paths ] map concat
     ] if
+    [ last "end" = ] filter
     ;
 
-: silver ( input -- x*y ) drop f ;
+: silver ( walk -- x*y ) distinct-paths length ;
 
-: gold ( input -- n ) drop f ;
+: gold ( walk -- n ) drop f ;
 
-: day12 ( -- silverAnswer goldAnswer ) "day12" "input.txt" vocab-file-path utf8 file-lines [ silver ] [ gold ] bi ;
+: day12 ( -- silverAnswer goldAnswer ) "day12" "input.txt" vocab-file-path utf8 file-lines parse [ silver ] [ gold ] bi ;

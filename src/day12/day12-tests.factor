@@ -7,13 +7,15 @@ IN: day12.tests
     T{ walk
         { map
             H{
-                { "A" V{ "c" "b" "end" } }
-                { "b" V{ "d" "end" } }
+                { "A" V{ "start" "c" "b" "end" } }
+                { "b" V{ "start" "A" "d" "end" } }
+                { "c" V{ "A" } }
+                { "d" V{ "b" } }
+                { "end" V{ "A" "b" } }
                 { "start" V{ "A" "b" } }
             }
         }
-        { path
-            V{ "start" }
-        }
     }
 } [ example parse ] unit-test
+
+{ 4573 } [ day12 drop ] unit-test
