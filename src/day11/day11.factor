@@ -1,10 +1,10 @@
 ! Copyright (C) 2021 Jeremy W. Sherman.
 ! See http://factorcode.org/license.txt for BSD license.
-USING: accessors arrays assocs combinators grouping hashtables
-io io.encodings.utf8 io.files io.styles kernel math math.order
-math.parser math.ranges math.statistics math.vectors prettyprint
-sequences sets splitting strings tools.continuations vectors
-vocabs.metadata ;
+USING: accessors arrays assocs combinators grouping hash-sets
+hashtables io io.encodings.utf8 io.files io.styles kernel math
+math.order math.parser math.ranges math.statistics math.vectors
+prettyprint sequences sets splitting strings tools.continuations
+vectors vocabs.metadata ;
 IN: day11
 
 : example ( -- lines ) "5483143223
@@ -25,9 +25,11 @@ IN: day11
     swap [ 2array swap 2array ] curry map-index
     >hashtable ;
 : parse ( lines -- hp ) harvest [ parse-row ] map-index assoc-combine ;
-: neighbors ( hp point -- neighbor-only-hp )
+: neighbor-points ( point -- points )
     { { 1 0 } { -1 0 } { 0 1 } { 0 -1 }
-      { 1 1 } { -1 -1 } { -1 1 } { 1 -1 } } swap [ v+ ] curry map
+      { 1 1 } { -1 -1 } { -1 1 } { 1 -1 } } swap [ v+ ] curry map ;
+: neighbors ( hp point -- neighbor-only-hp )
+    neighbor-points
     swap extract-keys sift-values ;
 
 ! TIL: [ first ] [ second ] bi ===> first2
@@ -37,41 +39,46 @@ IN: day11
     [ dupd '[ _ 2array ] map ] map nip
     ;
 
-! test case in listener: H{ { { 0 0 } 2 } { { 1 1 } 0 } } HS{ { 1 1 } } purty
-:: purty ( hp flashed-points -- )
+:: purty ( hp -- )
     hp keys supremum first2 square-indexes
-    [ [ dup
-        flashed-points in?
-           [ hp at H{ { font-style bold } } [ pprint ] with-style ]
-           [ hp at pprint ] if
+    [ [ hp at dup 0 =
+           [ H{ { font-style bold } } [ pprint ] with-style ]
+           [ pprint ] if
         ] each "\n" write ] each
     ;
 
-:: step ( hp -- hp flashed-points )
-    hp [ 1 + ] assoc-map :> hp
-    HS{ } :> flashed-points
-    [ hp [
-        [ flashed-points in? not ] [ 9 > ] bi* and
-        ] assoc-filter assoc-empty? not ] [
-        ! grab all the 9s not already in flashed-points and store as newly-flashed
-        hp [
-            [ flashed-points in? not ] [ 9 > ] bi* and
-        ] assoc-filter keys :> newly-flashed
-        ! incr their neighbors
-        newly-flashed [
-            hp swap neighbors keys
-            [ hp swap [ 1 + ] change-at ] each
-        ] each
-        ! add the newly-flashed to flashed-points
-        flashed-points newly-flashed adjoin-all
-    ] while
-    ! reset 9 > to 0 in hp before returning
-    hp [ dup 9 > [ drop 0 ] when ] assoc-map :> hp
-    hp flashed-points
-    ;
+: incr-energy-levels ( hp -- hp )
+    [ 1 + ] assoc-map ;
+
+SYMBOL: F
+
+: flash-value ( hp point -- hp n )
+    over at F = 1 0 ? ;
+
+! poin must be flashable.
+: flash-incr ( hp point -- hp )
+    dupd swap over neighbor-points [ flash-value ] map sum
+    '[ _ + ] change-at ;
+
+: flashable? ( hp point -- ? )
+    of [ f = not ] [ F = not ] [ 0 = not ] tri and and ;
+
+: flash ( nflashed hp -- nflashed hp )
+    [ dup 9 > [ drop F [ 1 + ] 2dip ] when ] assoc-map
+    F over value? [
+        dup [ F = nip ] assoc-filter
+        keys [ neighbor-points ] map concat
+        >hash-set members
+        [ 2dup flashable? [ flash-incr ] [ drop ] if ] each
+        [ dup F = [ drop 0 ] when ] assoc-map
+        flash
+    ] when ;
+
+: step ( hp -- hp nflashed )
+    incr-energy-levels 0 swap flash swap ;
 
 ! how many total flashes after 100 steps?
-: silver ( hp -- x*y ) 0 swap 100 [ step '[ _ cardinality + ] dip ] times drop ;
+: silver ( hp -- x*y ) 0 swap 100 [ step '[ _ + ] dip ] times drop ;
 
 : gold ( hp -- n ) drop f ;
 
