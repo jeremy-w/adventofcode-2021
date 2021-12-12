@@ -68,12 +68,14 @@ M: walk clone
 
 : silver ( walk -- x*y ) distinct-paths length ;
 
+: double-small? ( path -- ? )
+    histogram [ [ big-cave? not ] [ 1 > ] bi* and ] assoc-any? ;
+
 : explore-long ( walk -- walks )
     dup current-cave "end" = [ drop { } ] [
         dup [ current-cave ] [ map>> at ] bi >hash-set
-        over ! walk on top - need to do a lot with it…
-        path>> [ big-cave? ] reject >hash-set
         ! TODO: throw them all out (as before), BUT ALSO keep each one, but only if no small-cave is already duplicated.
+        over path>> dup double-small? [ [ big-cave? ] reject >hash-set ] [ drop HS{ "start" } ] if
         diff members
         [ [ dup clone ] [ travel ] bi* ] map
         nip
@@ -85,7 +87,7 @@ M: walk clone
         drop path>> 1array
     ] [
         nip
-        [ distinct-paths ] map concat
+        [ distinct-long-paths ] map concat
     ] if
     [ last "end" = ] filter
     ;

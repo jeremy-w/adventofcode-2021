@@ -19,3 +19,16 @@ IN: day12.tests
 } [ example parse ] unit-test
 
 { 4573 } [ day12 drop ] unit-test
+
+{
+    {
+    V{ "start" "A" "a" "A" "a" "end" }
+    V{ "start" "A" "a" "b" "a" "end" }
+    V{ "start" "A" "a" "end" }
+}
+} [ "start-A
+A-a
+a-b
+a-end" "\n" split parse distinct-long-paths ] unit-test
+{ 36 } [ example parse gold ] unit-test
+{ 117509 } [ day12 nip ] unit-test
