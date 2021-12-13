@@ -3,8 +3,8 @@
 USING: accessors arrays assocs combinators dlists
 generalizations grouping hash-sets io.encodings.utf8 io.files
 kernel math math.parser math.ranges math.statistics math.vectors
-prettyprint sequences sets splitting strings tools.continuations
-vectors vocabs.metadata ;
+prettyprint sequences sets sorting splitting strings
+tools.continuations vectors vocabs.metadata ;
 IN: day13
 
 : example ( -- lines ) "6,10
@@ -66,6 +66,22 @@ C: <paper> paper
 
 : silver ( paper -- n ) paper-fold dots>> >hash-set cardinality ;
 
-: gold ( paper -- n ) drop f ;
+: mark-dot ( str-matrix dot -- str-matrix )
+    first2 swap
+    [ over nth ] dip
+    CHAR: # -rot swap set-nth
+    ;
+
+: visualize ( paper -- string )
+    dots>> natural-sort
+    dup [ [ first ] map supremum 1 + ] [ [ second ] map supremum 1 + ] bi
+    [0..b) [ drop V{ } clone over [ "." over push ] times "" join ] map nip
+    [ mark-dot ] reduce
+    "\n" join
+    ;
+
+: gold ( paper -- string )
+    dup folds>> swap [ drop paper-fold ] reduce
+    visualize ;
 
 : day13 ( -- silverAnswer goldAnswer ) "day13" "input.txt" vocab-file-path utf8 file-lines parse dup [ silver ] [ gold ] bi* ;
