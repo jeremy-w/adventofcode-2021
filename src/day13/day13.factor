@@ -1,9 +1,10 @@
 ! Copyright (C) 2021 Jeremy W. Sherman.
 ! See http://factorcode.org/license.txt for BSD license.
-USING: accessors arrays assocs combinators grouping
-io.encodings.utf8 io.files kernel math math.parser math.ranges
-math.statistics math.vectors prettyprint sequences sets
-splitting strings tools.continuations vectors vocabs.metadata ;
+USING: accessors arrays assocs combinators dlists
+generalizations grouping hash-sets io.encodings.utf8 io.files
+kernel math math.parser math.ranges math.statistics math.vectors
+prettyprint sequences sets splitting strings tools.continuations
+vectors vocabs.metadata ;
 IN: day13
 
 : example ( -- lines ) "6,10
@@ -49,8 +50,22 @@ C: <paper> paper
 : parse ( lines -- paper )
     V{ } clone V{ } clone <paper> [ parse-line ] reduce ;
 
-: silver ( input -- x*y ) drop f ;
+: mirror ( n around -- n )
+    swap over - - ;
 
-: gold ( input -- n ) drop f ;
+: fold-axis ( dot n axis -- dot )
+    pick over swap nth dup 4 npick >
+       [ rot mirror swap pick set-nth ] [ 3drop ] if
+       ;
 
-: day13 ( -- silverAnswer goldAnswer ) "day13" "input.txt" vocab-file-path utf8 file-lines [ silver ] [ gold ] bi ;
+: paper-fold ( paper -- paper )
+    dup folds>> 1 cut swap [ >>folds ] dip first
+    first2 swap "y" = 1 0 ? '[ _ _ fold-axis ]
+    '[ _ map ] change-dots
+    ;
+
+: silver ( paper -- n ) paper-fold dots>> >hash-set cardinality ;
+
+: gold ( paper -- n ) drop f ;
+
+: day13 ( -- silverAnswer goldAnswer ) "day13" "input.txt" vocab-file-path utf8 file-lines parse dup [ silver ] [ gold ] bi* ;

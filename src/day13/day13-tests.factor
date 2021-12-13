@@ -5,3 +5,6 @@ IN: day13.tests
 
 { { 6 10 } } [ "6,10" parse-dot ] unit-test
 { { "y" 7 } } [ "fold along y=7" parse-fold ] unit-test
+
+{ 17 } [ example parse silver ] unit-test
+{ 618 } [ day13 drop ] unit-test
