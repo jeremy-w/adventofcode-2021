@@ -73,7 +73,8 @@ C: <counting-template> counting-template
     [ over at ] dip
     ;
 : step-count ( counts rules -- counts )
-    swap [ reassign-count ] assoc-map nip
+    swap >alist [ dup 0 = not [ reassign-count ] when ] assoc-map nip
+    H{ } clone swap [ swap pick at+ ] assoc-each
     ;
 : step-counts ( ct -- ct )
     dup rules>> [ step-count ] curry change-counts ;
