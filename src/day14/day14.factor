@@ -56,7 +56,11 @@ C: <template> template
 : step ( template -- template )
     dup rules>> [ rewrite-clumps ] curry change-polymer ;
 
-: silver ( template -- x*y ) drop f ;
+: silver ( template -- x*y )
+    10 [ step ] times
+    polymer>> histogram [ [ 1string ] dip ] assoc-map
+    values [ supremum ] [ infimum ] bi
+    - ;
 
 : gold ( template -- n ) drop f ;
 

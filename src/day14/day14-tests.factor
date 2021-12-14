@@ -8,3 +8,6 @@ IN: day14.tests
 { T{ template { polymer "" } { rules H{ { "CH" "CB" } } } } } [ "" H{ } <template> "CH -> B" parse-line ] unit-test
 
 { "NCNBCHB" } [ example parse step polymer>> ] unit-test
+
+{ 1588 } [ example parse silver ] unit-test
+{ 3118 } [ day14 drop ] unit-test
