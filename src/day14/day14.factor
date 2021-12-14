@@ -88,20 +88,14 @@ C: <counting-template> counting-template
     dup rules>> [ step-count ] curry change-counts ;
 : >char-histogram ( ct -- histogram )
     dup counts>> >alist [
-        clone dup clone
-           [ 0 over [ first ] change-nth ]
-           [ 0 over [ second ] change-nth ]
-           bi*
-           2array
-    ] map concat recombine
-    2dup
-    swap first-char>> 1 swap rot at+
-    dup [ swap last-char>> 1 swap rot at+ ] dip
-    [ 2 / ] assoc-map ;
+        [ first ] dip
+    ] assoc-map recombine
+    swap last-char>> 1 swap pick at+
+    ;
 : gold ( template -- n )
     >counting-template 40 [ step-counts ] times
     >char-histogram
     strength
     ;
 
-: day14 ( -- silverAnswer goldAnswer ) "day14" "input.txt" vocab-file-path utf8 file-lines parse [ silver ] [ gold ] bi ;
+: day14 ( -- silverAnswer goldAnswer ) "day14" "input.txt" vocab-file-path utf8 file-lines parse [ clone silver ] [ clone gold ] bi ;

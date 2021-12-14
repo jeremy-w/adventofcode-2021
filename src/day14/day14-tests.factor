@@ -40,5 +40,6 @@ example parse silver 1array
     strength
 ] unit-test
 
-! we are overcounting somehow
 { 2188189693529 } [ example parse gold ] unit-test
+
+{ 4332887448171 } [ day14 nip ] unit-test
