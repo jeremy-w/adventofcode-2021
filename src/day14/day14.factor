@@ -28,14 +28,17 @@ CN -> C" "\n" split ;
 TUPLE: template polymer rules ;
 C: <template> template
 
+: simplify-rewrite ( ch b -- ch cb )
+    dupd [ first 1string ] dip
+    "" glue ;
+
 : parse-line ( template line -- template )
     dup "" =
        [ drop ]
-       [ " -> " split-subseq dup length 1 =
+       [ " -> " split-subseq [ "" like ] map
+       dup length 1 =
             [ first >>polymer ]
-            [ first2 [ members ] bi@
-                dupd [ first 1string ] dip
-                "" glue
+            [ first2 simplify-rewrite
                 swap '[ _ _ pick set-at ] change-rules
             ] if
         ] if
@@ -43,6 +46,15 @@ C: <template> template
 
 : parse ( lines -- template )
     "" H{ } <template> [ parse-line ] reduce ;
+
+: rewrite-clumps ( polymer rules -- polymer )
+    dupd [ last 1string swap ] dip
+    swap 2 clump [ over at ] map nip
+    swap suffix
+    "" join ;
+
+: step ( template -- template )
+    dup rules>> [ rewrite-clumps ] curry change-polymer ;
 
 : silver ( template -- x*y ) drop f ;
 
