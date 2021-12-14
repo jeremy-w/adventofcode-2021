@@ -56,12 +56,13 @@ C: <template> template
 : step ( template -- template )
     dup rules>> [ rewrite-clumps ] curry change-polymer ;
 
-: silver ( template -- x*y )
-    10 [ step ] times
+: run ( template times -- delta )
+    [ step ] times
     polymer>> histogram [ [ 1string ] dip ] assoc-map
     values [ supremum ] [ infimum ] bi
-    - ;
-
-: gold ( template -- n ) drop f ;
+    -
+    ;
+: silver ( template -- x*y ) 10 run ;
+: gold ( template -- n ) 40 run ;
 
 : day14 ( -- silverAnswer goldAnswer ) "day14" "input.txt" vocab-file-path utf8 file-lines parse [ silver ] [ gold ] bi ;
