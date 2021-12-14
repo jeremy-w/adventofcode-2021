@@ -11,3 +11,7 @@ IN: day14.tests
 
 { 1588 } [ example parse silver ] unit-test
 { 3118 } [ "day14" "input.txt" vocab-file-path utf8 file-lines parse silver ] unit-test
+
+! These two steps should give the same results, and yet.
+example parse step >counting-template 1array
+[ example parse >counting-template step-counts ] unit-test

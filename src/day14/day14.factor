@@ -1,6 +1,6 @@
 ! Copyright (C) 2021 Jeremy W. Sherman.
 ! See http://factorcode.org/license.txt for BSD license.
-USING: accessors arrays assocs combinators grouping
+USING: accessors arrays assocs combinators grouping hashtables
 io.encodings.utf8 io.files kernel math math.parser math.ranges
 math.statistics math.vectors prettyprint sequences sets
 splitting strings tools.continuations vectors vocabs.metadata ;
@@ -63,6 +63,24 @@ C: <template> template
     -
     ;
 : silver ( template -- x*y ) 10 run ;
-: gold ( template -- n ) 40 run ;
+
+TUPLE: counting-template counts last-char rules ;
+C: <counting-template> counting-template
+: >counting-template ( template -- counting-template )
+    [ [ rules>> keys [ 0 2array ] map >hashtable ] [ polymer>> 2 clump histogram ] bi assoc-union ] [ polymer>> last ] [ rules>> ] tri <counting-template> ;
+! FIXME: this does not work right. we are miscomputing.
+: reassign-count ( rules key value -- rules new-key value )
+    [ over at ] dip
+    ;
+: step-count ( counts rules -- counts )
+    swap [ reassign-count ] assoc-map nip
+    ;
+: step-counts ( ct -- ct )
+    dup rules>> [ step-count ] curry change-counts ;
+: gold ( template -- n )
+    >counting-template 40 [ step-counts ] times
+    ! TODO: go from final counts to character histogram
+    ! then finish like run
+    ;
 
 : day14 ( -- silverAnswer goldAnswer ) "day14" "input.txt" vocab-file-path utf8 file-lines parse [ silver ] [ gold ] bi ;
