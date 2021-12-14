@@ -1,9 +1,10 @@
 ! Copyright (C) 2021 Jeremy W. Sherman.
 ! See http://factorcode.org/license.txt for BSD license.
 USING: accessors arrays assocs combinators grouping hashtables
-io.encodings.utf8 io.files kernel math math.parser math.ranges
-math.statistics math.vectors prettyprint sequences sets
-splitting strings tools.continuations vectors vocabs.metadata ;
+io.encodings.utf8 io.files kernel math math.functions
+math.parser math.ranges math.statistics math.vectors prettyprint
+sequences sets splitting strings tools.continuations vectors
+vocabs.metadata ;
 IN: day14
 
 : example ( -- lines ) "NNCB
@@ -56,11 +57,14 @@ C: <template> template
 : step ( template -- template )
     dup rules>> [ rewrite-clumps ] curry change-polymer ;
 
+: string-keys ( hashmap -- hashmap )
+     [ [ 1string ] dip ] assoc-map ;
+
 : strength ( histogram -- n )
     values [ supremum ] [ infimum ] bi - ;
 : run ( template times -- delta )
     [ step ] times
-    polymer>> histogram [ [ 1string ] dip ] assoc-map
+    polymer>> histogram string-keys
     strength
     ;
 : silver ( template -- x*y ) 10 run ;
@@ -82,16 +86,19 @@ C: <counting-template> counting-template
     ;
 : step-counts ( ct -- ct )
     dup rules>> [ step-count ] curry change-counts ;
-: gold ( template -- n )
-    >counting-template 40 [ step-counts ] times
-    counts>> >alist [
+: counts>char-histogram ( counts -- histogram )
+    >alist [
         clone dup clone
            [ 0 over [ first ] change-nth ]
            [ 0 over [ second ] change-nth ]
            bi*
            2array
-        ] map concat
-    recombine
+        ] map concat recombine
+        [ 2 / round ] assoc-map ;
+: gold ( template -- n )
+    >counting-template 40 [ step-counts ] times
+    dup counts>> counts>char-histogram
+    nip ! 1 rot last-char>> pick at+
     strength
     ;
 
