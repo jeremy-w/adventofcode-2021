@@ -13,10 +13,10 @@ IN: day14.tests
 { 3118 } [ "day14" "input.txt" vocab-file-path utf8 file-lines parse silver ] unit-test
 
 ! These two steps should give the same results, and yet.
-example parse step >counting-template
-counts>> [ nip 0 = ] assoc-reject
-1array
-[
-    example parse >counting-template step-counts
-    counts>> [ nip 0 = ] assoc-reject
-] unit-test
+! example parse step >counting-template
+! counts>> [ nip 0 = ] assoc-reject
+! 1array
+! [
+!     example parse >counting-template step-counts
+!     counts>> [ nip 0 = ] assoc-reject
+! ] unit-test

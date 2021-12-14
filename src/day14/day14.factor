@@ -56,32 +56,43 @@ C: <template> template
 : step ( template -- template )
     dup rules>> [ rewrite-clumps ] curry change-polymer ;
 
+: strength ( histogram -- n )
+    values [ supremum ] [ infimum ] bi - ;
 : run ( template times -- delta )
     [ step ] times
     polymer>> histogram [ [ 1string ] dip ] assoc-map
-    values [ supremum ] [ infimum ] bi
-    -
+    strength
     ;
 : silver ( template -- x*y ) 10 run ;
 
 TUPLE: counting-template counts last-char rules ;
 C: <counting-template> counting-template
 : >counting-template ( template -- counting-template )
-    [ [ rules>> keys [ 0 2array ] map >hashtable ] [ polymer>> 2 clump histogram ] bi assoc-union ] [ polymer>> last ] [ rules>> ] tri <counting-template> ;
-! FIXME: this does not work right. we are miscomputing.
-: reassign-count ( rules key value -- rules new-key value )
-    [ over at ] dip
+    [ polymer>> 2 clump histogram ] [ polymer>> last ] [ rules>> ] tri <counting-template> ;
+: spawn-pairs ( rules key -- rules keys )
+    dup [ over at ] dip
+    dupd [ second 1string ] bi@ "" glue
+    2array
     ;
+: recombine ( alist -- hashtable )
+    H{ } clone swap [ swap pick at+ ] assoc-each ;
 : step-count ( counts rules -- counts )
-    swap >alist [ dup 0 = not [ reassign-count ] when ] assoc-map nip
-    H{ } clone swap [ swap pick at+ ] assoc-each
+    swap >alist [ first2 [ spawn-pairs ] dip [ 2array ] curry map ] map concat nip
+    recombine
     ;
 : step-counts ( ct -- ct )
     dup rules>> [ step-count ] curry change-counts ;
 : gold ( template -- n )
     >counting-template 40 [ step-counts ] times
-    ! TODO: go from final counts to character histogram
-    ! then finish like run
+    counts>> >alist [
+        clone dup clone
+           [ 0 over [ first ] change-nth ]
+           [ 0 over [ second ] change-nth ]
+           bi*
+           2array
+        ] map concat
+    recombine
+    strength
     ;
 
 : day14 ( -- silverAnswer goldAnswer ) "day14" "input.txt" vocab-file-path utf8 file-lines parse [ silver ] [ gold ] bi ;
