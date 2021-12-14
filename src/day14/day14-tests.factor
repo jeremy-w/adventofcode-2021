@@ -27,21 +27,18 @@ example parse 10 [ step ] times >counting-template counts>> 1array
     counts>>
 ] unit-test
 
-! FIXME: counts>char-histogram is double-counting
 example parse 10 [ step ] times polymer>> histogram string-keys 1array
 [
     example parse >counting-template 10 [ step-counts ] times
-    counts>>
-    counts>char-histogram string-keys
+    >char-histogram string-keys
 ] unit-test
 
 example parse silver 1array
 [
     example parse >counting-template 10 [ step-counts ] times
-    counts>>
-    counts>char-histogram
+    >char-histogram
     strength
 ] unit-test
 
 ! we are overcounting somehow
-! { 2188189693529 } [ example parse gold ] unit-test
+{ 2188189693529 } [ example parse gold ] unit-test

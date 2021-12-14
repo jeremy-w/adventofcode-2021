@@ -69,10 +69,10 @@ C: <template> template
     ;
 : silver ( template -- x*y ) 10 run ;
 
-TUPLE: counting-template counts last-char rules ;
+TUPLE: counting-template counts first-char last-char rules ;
 C: <counting-template> counting-template
 : >counting-template ( template -- counting-template )
-    [ polymer>> 2 clump histogram ] [ polymer>> last ] [ rules>> ] tri <counting-template> ;
+    { [ polymer>> 2 clump histogram ] [ polymer>> first ] [ polymer>> last ] [ rules>> ] } cleave <counting-template> ;
 : spawn-pairs ( rules key -- rules keys )
     dup [ over at ] dip
     dupd [ second 1string ] bi@ "" glue
@@ -86,19 +86,21 @@ C: <counting-template> counting-template
     ;
 : step-counts ( ct -- ct )
     dup rules>> [ step-count ] curry change-counts ;
-: counts>char-histogram ( counts -- histogram )
-    >alist [
+: >char-histogram ( ct -- histogram )
+    dup counts>> >alist [
         clone dup clone
            [ 0 over [ first ] change-nth ]
            [ 0 over [ second ] change-nth ]
            bi*
            2array
-        ] map concat recombine
-        [ 2 / round ] assoc-map ;
+    ] map concat recombine
+    2dup
+    swap first-char>> 1 swap rot at+
+    dup [ swap last-char>> 1 swap rot at+ ] dip
+    [ 2 / ] assoc-map ;
 : gold ( template -- n )
     >counting-template 40 [ step-counts ] times
-    dup counts>> counts>char-histogram
-    nip ! 1 rot last-char>> pick at+
+    >char-histogram
     strength
     ;
 
