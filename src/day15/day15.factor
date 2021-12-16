@@ -60,7 +60,7 @@ TUPLE: pathfinding hm prev dist unvisited ;
     keys [ [ first ] map supremum ] [ [ second ] map supremum ] bi 2array ;
 : min-unvisited ( pathfinding -- cost xy )
     dup unvisited>> members dup [ pick dist>> at ] map zip nip
-    ! GOTCHA: originally got the min dist of unvisited, but then ran value-at on hm, not the unvisited-filter of it. hmm actually i think i just wrote a manual assoc-filter, derp.
+    ! GOTCHA: originally got the min dist of unvisited, but then ran value-at on hm, not the unvisited-filter of it. hmm actually i think i just wrote a manual assoc-filter, derp. except assoc-filter is somehow way, way slower.
     dup values infimum
     swap dupd value-at ;
 :: dijkstra-step ( pathfinding -- pathfinding )
