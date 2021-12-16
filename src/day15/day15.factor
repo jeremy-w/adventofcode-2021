@@ -90,6 +90,11 @@ TUPLE: pathfinding hm prev dist unvisited ;
 ! pathfinding: find path with lowest total risk, and output the sum of that risk. the nodes visited after the start point incur risk; effectively the vertex label is the label for all inbound paths to that vertex.
 : silver ( hm -- x*y ) find-path ;
 
-: gold ( input -- n ) drop f ;
+
+! they say to tile it so it's just the NW of a 5x5 square
+! the risk levels increase as you go, but wrap around from 9 back to 0.
+: replicate-hm ( hm -- hm )
+    ;
+: gold ( input -- n ) replicate-hm find-path ;
 
 : day15 ( -- silverAnswer goldAnswer ) "day15" "input.txt" vocab-file-path utf8 file-lines parse [ clone silver ] [ clone gold ] bi ;
