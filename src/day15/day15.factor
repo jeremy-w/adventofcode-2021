@@ -1,8 +1,8 @@
 ! Copyright (C) 2021 Jeremy W. Sherman.
 ! See http://factorcode.org/license.txt for BSD license.
-USING: accessors arrays assocs hashtables heaps
+USING: accessors arrays assocs hashtables heaps io
 io.encodings.utf8 io.files kernel math math.parser math.vectors
-sequences splitting strings vocabs.metadata ;
+prettyprint sequences sets splitting strings vocabs.metadata ;
 IN: day15
 
 : example ( -- lines ) "1163751742
@@ -32,31 +32,63 @@ IN: day15
 CONSTANT: infinity 1/0.
 
 ! wish there was a worked example of using the path-finding vocab. bet i could learn some things from there.
-TUPLE: pathfinding hm prev dist ;
+TUPLE: pathfinding hm prev dist unvisited ;
 : pathfinding-init-dist ( pathfinding -- pathfinding )
     dup hm>> keys [
         [ infinity swap pick set-at ] curry change-dist
     ] each ;
+: pathfinding-init-unvisited ( pathfinding -- pathfinding )
+    dup hm>> keys [
+        [ over adjoin ] curry change-unvisited
+    ] each ;
 : <pathfinding> ( hm -- pathfinding )
     H{ } clone
     H{ } clone
+    HS{ } clone
     pathfinding boa
-    pathfinding-init-dist ;
+    pathfinding-init-dist
+    pathfinding-init-unvisited ;
 
-: start-at ( pathfinding xy -- )
+: zero-dist ( pathfinding xy -- )
     [ dist>> ] dip 0 swap rot set-at ;
+: visit ( pathfinding xy -- )
+    ! dup "visit: " write .
+    [ unvisited>> ] dip swap delete ;
 : next-step ( pathfinding -- cost xy )
     dist>> dup values infimum swap dupd value-at ;
+: dst ( hm -- xy )
+    keys [ [ first ] map supremum ] [ [ second ] map supremum ] bi 2array ;
+: min-unvisited ( pathfinding -- cost xy )
+    dup unvisited>> members dup [ pick dist>> at ] map zip nip
+    ! GOTCHA: originally got the min dist of unvisited, but then ran value-at on hm, not the unvisited-filter of it. hmm actually i think i just wrote a manual assoc-filter, derp.
+    dup values infimum
+    swap dupd value-at ;
+:: dijkstra-step ( pathfinding -- pathfinding )
+    pathfinding min-unvisited :> ( cost u )
+    pathfinding u visit
+    pathfinding hm>> u neighbors keys
+    pathfinding unvisited>> within
+    [| v |
+        pathfinding hm>> v of :> step-cost
+        cost step-cost + :> alt
+        pathfinding dist>> v of :> curr
+        alt curr < [
+            alt v pathfinding dist>> set-at
+            u v pathfinding prev>> set-at
+        ] when
+    ] each
+    pathfinding
+    ;
 : find-path ( hm -- cost )
     <pathfinding>
-    dup { 0 0 } start-at
-    ! TODO: repeat this till unvisited queue is empty.
-    ! TODO: actually create the unvisited queue. :|
-    ! dup [ next-step ] [  ]
-    drop 0 ;
+    dup { 0 0 } zero-dist
+    [ dup unvisited>> cardinality 0 > ] [
+        dijkstra-step
+    ] while
+    dup hm>> dst swap dist>> at ;
 
 ! pathfinding: find path with lowest total risk, and output the sum of that risk. the nodes visited after the start point incur risk; effectively the vertex label is the label for all inbound paths to that vertex.
-: silver ( input -- x*y ) drop f ;
+: silver ( hm -- x*y ) find-path ;
 
 : gold ( input -- n ) drop f ;
 

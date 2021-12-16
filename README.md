@@ -19,7 +19,7 @@ I'd like to do [Factor](https://factorcode.org/) or
   on macOS. Which is a shame, as the docs are mostly good, and
   [Andrea Ferretti's Factor tutorial](https://andreaferretti.github.io/factor-tutorial/)
   is comprehensive enough to get you places, if only I knew how to get started
-  with a basic "here's how to work in a repo with Factor" walkthrough - 
+  with a basic "here's how to work in a repo with Factor" walkthrough -
   a "second program" walkthrough, rather than "first program".
 
   But perhaps the
@@ -70,5 +70,6 @@ that I already know how to use. Alas.
 One of my keyboards sends weird F key codes.
 
 - Help: F1: `\ word help`
+  - See help for a vocab: `"vocab-name" about`, e.g. `"assocs" about`
 - Refresh: F2: `refresh-all`
 - Errors: F3: `show-error-list`
